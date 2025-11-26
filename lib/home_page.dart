@@ -69,7 +69,8 @@ class HomeScreen extends StatelessWidget {
                             constraints: const BoxConstraints(maxWidth: 600),
                             child: HeaderButtons(
                               onSearch: placeholderCallbackForButtons,
-                              onAccount: placeholderCallbackForButtons,
+                              onAccount: () =>
+                                  Navigator.pushNamed(context, '/login'),
                               onCart: placeholderCallbackForButtons,
                               onMenu: placeholderCallbackForButtons,
                             ),

@@ -13,12 +13,8 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   void _onLogin() {
-    if (_formKey.currentState?.validate() ?? false) {
-      // TODO: handle login
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Logging in...')),
-      );
-    }
+    // Bypass auth for now, go straight to home.
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
   }
 
   void _onRegister() {
@@ -90,8 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                           if (v == null || v.trim().isEmpty) {
                             return 'Email is required';
                           }
-                          final emailReg =
-                              RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+                          final emailReg = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
                           if (!emailReg.hasMatch(v.trim())) {
                             return 'Enter a valid email';
                           }

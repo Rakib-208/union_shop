@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/product_page.dart';
 import 'package:union_shop/home_page.dart'; // added
+import 'package:union_shop/login_page.dart'; // added
 
 void main() {
   runApp(const UnionShopApp());
@@ -19,7 +20,10 @@ class UnionShopApp extends StatelessWidget {
       ),
       home: const HomeScreen(), // unchanged, now comes from home_page.dart
       initialRoute: '/',
-      routes: {'/product': (context) => const ProductPage()},
+      routes: {
+        '/product': (context) => const ProductPage(),
+        '/login': (context) => const LoginPage(), // added
+      },
     );
   }
 }
