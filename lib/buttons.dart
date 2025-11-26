@@ -21,6 +21,7 @@ class HeaderButtons extends StatelessWidget {
       children: [
         IconButton(
           icon: const Icon(Icons.search, size: 18, color: Colors.grey),
+          tooltip: 'Search',
           padding: const EdgeInsets.all(8),
           constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
           onPressed: onSearch,
@@ -33,13 +34,16 @@ class HeaderButtons extends StatelessWidget {
           onPressed: onAccount,
         ),
         IconButton(
-          icon: const Icon(Icons.shopping_bag_outlined, size: 18, color: Colors.grey),
+          icon: const Icon(Icons.shopping_bag_outlined,
+              size: 18, color: Colors.grey),
+          tooltip: 'Cart',
           padding: const EdgeInsets.all(8),
           constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
           onPressed: onCart,
         ),
         IconButton(
           icon: const Icon(Icons.menu, size: 18, color: Colors.grey),
+          tooltip: 'Menu',
           padding: const EdgeInsets.all(8),
           constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
           onPressed: onMenu,
