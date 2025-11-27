@@ -45,8 +45,7 @@ class _HeaderButtonsState extends State<HeaderButtons> {
             ),
             // Top search bar
             Positioned(
-              // Move the bar a bit down from the top
-              top: 12,
+              top: 60,
               left: 0,
               right: 0,
               child: Material(
@@ -57,7 +56,7 @@ class _HeaderButtonsState extends State<HeaderButtons> {
                     color: Colors.white,
                     // Reduce vertical padding to shrink height
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
                     child: Row(
                       children: [
                         Expanded(
