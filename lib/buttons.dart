@@ -143,12 +143,28 @@ class _HeaderButtonsState extends State<HeaderButtons> {
           constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
           onPressed: widget.onCart,
         ),
-        IconButton(
+        PopupMenuButton<int>(
           icon: const Icon(Icons.menu, size: 18, color: Colors.grey),
           tooltip: 'Menu',
           padding: const EdgeInsets.all(8),
           constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-          onPressed: widget.onMenu,
+          onSelected: (value) {
+            if (value == 0) {
+              Navigator.of(context).pushNamed('/');
+            }
+          },
+          itemBuilder: (context) => [
+            const PopupMenuItem<int>(
+              value: 0,
+              child: Row(
+                children: [
+                  Icon(Icons.home, size: 18),
+                  SizedBox(width: 8),
+                  Text('Home'),
+                ],
+              ),
+            ),
+          ],
         ),
       ],
     );
