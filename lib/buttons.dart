@@ -148,6 +148,10 @@ class _HeaderButtonsState extends State<HeaderButtons> {
           tooltip: 'Menu',
           padding: const EdgeInsets.all(8),
           constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+
+          // This moves the menu DOWN (positive Y value)
+          offset: const Offset(0, 32),
+
           onSelected: (value) {
             if (value == 0) {
               Navigator.of(context).pushNamed('/');
@@ -165,7 +169,7 @@ class _HeaderButtonsState extends State<HeaderButtons> {
               ),
             ),
           ],
-        ),
+        )
       ],
     );
   }
