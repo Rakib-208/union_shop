@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/product_page.dart';
 import 'package:union_shop/home_page.dart'; // added
-import 'package:union_shop/login_page.dart'; // added
+import 'package:union_shop/login_page.dart';
+import 'package:union_shop/aboutus.dart';
 
 void main() {
   runApp(const UnionShopApp());
@@ -22,7 +23,9 @@ class UnionShopApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/product': (context) => const ProductPage(),
-        '/login': (context) => const LoginPage(), // added
+        '/login': (context) => const LoginPage(),
+        '/about': (context) => const AboutUsPage(),
+// added
       },
     );
   }
