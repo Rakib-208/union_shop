@@ -38,15 +38,10 @@ class _SignupPageState extends State<SignupPage> {
     // TODO: replace this with real signup logic (API / Firebase / etc.)
     await Future.delayed(const Duration(seconds: 1));
 
-    if (!mounted) return;
-
-    setState(() => _isLoading = false);
-
-    // After successful signup, go to homepage.
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      '/',
-      (route) => false, // clear back stack so user can't go back to signup
-    );
+    if (mounted) {
+      setState(() => _isLoading = false);
+      Navigator.of(context).pop(); // go back to login after signup
+    }
   }
 
   @override

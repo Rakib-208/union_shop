@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:union_shop/home_page.dart';
 import 'package:union_shop/product_page.dart';
-import 'package:union_shop/home_page.dart'; // added
 import 'package:union_shop/login_page.dart';
 import 'package:union_shop/aboutus.dart';
 import 'package:union_shop/signup_page.dart';
@@ -18,16 +18,20 @@ class UnionShopApp extends StatelessWidget {
       title: 'Union Shop',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4d2963)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF4d2963),
+        ),
       ),
-      home: const HomeScreen(), // unchanged, now comes from home_page.dart
-      initialRoute: '/',
+
+      // App entry point: HomeScreen from home_page.dart
+      home: const HomeScreen(),
+
+      // Named routes used elsewhere in the app
       routes: {
         '/product': (context) => const ProductPage(),
         '/login': (context) => const LoginPage(),
         '/about': (context) => const AboutUsPage(),
         SignupPage.routeName: (context) => const SignupPage(),
-// added
       },
     );
   }
