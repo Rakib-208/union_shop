@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:union_shop/footer.dart';
 
 class AboutUsPage extends StatelessWidget {
   const AboutUsPage({super.key});
@@ -145,6 +146,7 @@ class AboutUsPage extends StatelessWidget {
                 Icons.access_time, 'Monday–Friday: 10am–4pm (Term Time)'),
 
             const SizedBox(height: 50),
+            const Footer(),
           ],
         ),
       ),
