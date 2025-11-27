@@ -254,8 +254,9 @@ class HomeScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'About Us'
-                    'Terms & Conditions of Sale Policy',
+                    'Terms & Conditions of Sale Policy'
+                    '  '
+                    'About Us',
                     style: TextStyle(
                       color: Colors.black87,
                       fontSize: 14,
