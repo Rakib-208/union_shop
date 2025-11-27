@@ -152,6 +152,8 @@ class _HeaderButtonsState extends State<HeaderButtons> {
           onSelected: (value) {
             if (value == 0) {
               Navigator.of(context).pushNamed('/');
+            } else if (value == 1) {
+              Navigator.of(context).pushNamed('/about');
             }
           },
           itemBuilder: (context) => [
@@ -162,6 +164,16 @@ class _HeaderButtonsState extends State<HeaderButtons> {
                   Icon(Icons.home, size: 10),
                   SizedBox(width: 5),
                   Text('Home'),
+                ],
+              ),
+            ),
+            const PopupMenuItem<int>(
+              value: 1,
+              child: Row(
+                children: [
+                  Icon(Icons.info_outline, size: 10),
+                  SizedBox(width: 5),
+                  Text('About Us'),
                 ],
               ),
             ),
