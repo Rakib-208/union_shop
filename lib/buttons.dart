@@ -148,10 +148,7 @@ class _HeaderButtonsState extends State<HeaderButtons> {
           tooltip: 'Menu',
           padding: const EdgeInsets.all(8),
           constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-
-          // This moves the menu DOWN (positive Y value)
-          offset: const Offset(0, 32),
-
+          position: PopupMenuPosition.under,
           onSelected: (value) {
             if (value == 0) {
               Navigator.of(context).pushNamed('/');
@@ -162,8 +159,8 @@ class _HeaderButtonsState extends State<HeaderButtons> {
               value: 0,
               child: Row(
                 children: [
-                  Icon(Icons.home, size: 18),
-                  SizedBox(width: 8),
+                  Icon(Icons.home, size: 10),
+                  SizedBox(width: 5),
                   Text('Home'),
                 ],
               ),
