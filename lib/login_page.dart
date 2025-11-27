@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:union_shop/signup_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,13 +16,6 @@ class _LoginPageState extends State<LoginPage> {
   void _onLogin() {
     // Bypass auth for now, go straight to home.
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-  }
-
-  void _onRegister() {
-    // TODO: navigate to register page
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Go to register')),
-    );
   }
 
   @override
@@ -137,7 +131,9 @@ class _LoginPageState extends State<LoginPage> {
 
                       // Register button below
                       TextButton(
-                        onPressed: _onRegister,
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(SignupPage.routeName);
+                        },
                         child: const Text('Create an account'),
                       ),
                     ],
