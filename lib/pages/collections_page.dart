@@ -1,28 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/footer.dart';
+import 'package:union_shop/product.dart'; // FIX: import shared Product model
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const collections = [
+    // FIX: collections now derived dynamically from Product types
+    final clothingProducts =
+        allProducts.where((p) => p.type == ProductType.clothing).toList();
+
+    final accessoriesProducts =
+        allProducts.where((p) => p.type == ProductType.accessories).toList();
+
+    final collections = [
+      // FIX: was const → now dynamic due to product counts
       _CollectionData(
-        title: 'Course Hoodies',
-        description: 'Faculty and course specific hoodies and sweatshirts.',
-        routeName: '/collection',
+        // FIX: Clothing collection now uses model-driven count
+        title: 'Clothing (${clothingProducts.length} items)',
+        description: 'T-shirts, shirts, pants, hoodies and jackets.',
+        routeName:
+            '/collection-example', // uses your existing CollectionPage route
       ),
       _CollectionData(
-        title: 'Student Essentials',
-        description: 'Stationery, study accessories and everyday basics.',
-        routeName: null,
+        // FIX: Accessories collection now uses model-driven count
+        title: 'Accessories (${accessoriesProducts.length} items)',
+        description: 'Caps and sunglasses.',
+        routeName: null, // placeholder: no accessories page yet
       ),
       _CollectionData(
-        title: 'Gifts & Souvenirs',
-        description: 'Portsmouth themed gifts, mugs and accessories.',
-        routeName: null,
-      ),
-      _CollectionData(
+        // FIX: Sale route remains unchanged
         title: 'Sale & Clearance',
         description: 'Discounted end-of-line stock and seasonal promotions.',
         routeName: '/sale',
@@ -39,44 +47,39 @@ class CollectionsPage extends StatelessWidget {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),
-            color: const Color(0xFFF3E9FB),
+            color: Colors.grey[100],
             child: const Text(
-              'Browse our collections of University of Portsmouth merchandise '
-              'and student essentials. This page uses hardcoded dummy data '
-              'for coursework purposes.',
-              style: TextStyle(fontSize: 16),
+              'Browse product collections. Clothing and accessories are now '
+              'grouped using the shared product catalogue.',
             ),
           ),
           Expanded(
             child: ListView.separated(
-              padding: const EdgeInsets.all(24),
               itemCount: collections.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 16),
+              separatorBuilder: (context, index) => const Divider(height: 0),
               itemBuilder: (context, index) {
                 final data = collections[index];
-                return Card(
-                  elevation: 1,
-                  child: ListTile(
-                    title: Text(
-                      data.title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                      ),
+                return ListTile(
+                  title: Text(
+                    data.title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
                     ),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Text(
-                        data.description,
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: data.routeName == null
-                        ? null
-                        : () =>
-                            Navigator.of(context).pushNamed(data.routeName!),
                   ),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      data.description,
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  ),
+                  trailing: data.routeName != null
+                      ? const Icon(Icons.chevron_right)
+                      : null,
+                  onTap: data.routeName != null
+                      ? () => Navigator.of(context).pushNamed(data.routeName!)
+                      : null,
                 );
               },
             ),
