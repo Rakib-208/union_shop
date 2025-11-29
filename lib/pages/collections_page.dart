@@ -10,7 +10,7 @@ class CollectionsPage extends StatelessWidget {
       _CollectionData(
         title: 'Course Hoodies',
         description: 'Faculty and course specific hoodies and sweatshirts.',
-        routeName: '/collection-example',
+        routeName: '/collection',
       ),
       _CollectionData(
         title: 'Student Essentials',
@@ -74,7 +74,8 @@ class CollectionsPage extends StatelessWidget {
                     trailing: const Icon(Icons.chevron_right),
                     onTap: data.routeName == null
                         ? null
-                        : () => Navigator.of(context).pushNamed(data.routeName!),
+                        : () =>
+                            Navigator.of(context).pushNamed(data.routeName!),
                   ),
                 );
               },

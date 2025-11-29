@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/footer.dart';
 
-class CollectionExamplePage extends StatefulWidget {
-  const CollectionExamplePage({super.key});
+class CollectionPage extends StatefulWidget {
+  const CollectionPage({super.key});
 
   @override
-  State<CollectionExamplePage> createState() => _CollectionExamplePageState();
+  State<CollectionPage> createState() => _CollectionPageState();
 }
 
-class _CollectionExamplePageState extends State<CollectionExamplePage> {
+class _CollectionPageState extends State<CollectionPage> {
   String _selectedSort = 'Featured';
   String _selectedSize = 'All';
   String _selectedColour = 'All';

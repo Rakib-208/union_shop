@@ -35,7 +35,7 @@ class UnionShopApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/about': (context) => const AboutUsPage(),
         '/collections': (context) => const CollectionsPage(),
-        '/collection-example': (context) => const CollectionExamplePage(),
+        '/collection': (context) => const CollectionPage(),
         '/sale': (context) => const SaleCollectionPage(),
         SignupPage.routeName: (context) => const SignupPage(),
       },

@@ -35,8 +35,7 @@ void main() {
       expect(routes['/login']!(context), isA<LoginPage>());
       expect(routes['/about']!(context), isA<AboutUsPage>());
       expect(routes['/collections']!(context), isA<CollectionsPage>());
-      expect(routes['/collection-example']!(context),
-          isA<CollectionExamplePage>());
+      expect(routes['/collection']!(context), isA<CollectionPage>());
       expect(routes['/sale']!(context), isA<SaleCollectionPage>());
       expect(routes[SignupPage.routeName]!(context), isA<SignupPage>());
     });
