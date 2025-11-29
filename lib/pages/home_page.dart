@@ -17,6 +17,10 @@ class HomeScreen extends StatelessWidget {
     Navigator.pushNamed(context, '/collections');
   }
 
+  void navigateToLogin(BuildContext context) {
+    Navigator.pushNamed(context, '/login');
+  }
+
   void placeholderCallbackForButtons() {
     // This is the event handler for header buttons that don't need behaviour yet
   }
@@ -24,7 +28,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // EDIT (earlier): SafeArea so header is not hidden under system bar on mobile.
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
@@ -54,8 +57,6 @@ class HomeScreen extends StatelessWidget {
                         horizontal: 10,
                         vertical: 8,
                       ),
-                      // EDIT: Use LayoutBuilder + flex to control horizontal
-                      // space percentages for logo vs buttons, depending on width.
                       child: LayoutBuilder(
                         builder: (context, constraints) {
                           final isMobile = constraints.maxWidth < 600;
@@ -76,7 +77,6 @@ class HomeScreen extends StatelessWidget {
                                       child: Image.network(
                                         'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
                                         height: 32,
-                                        // Slightly smaller on mobile
                                         errorBuilder:
                                             (context, error, stackTrace) =>
                                                 const Icon(
@@ -93,7 +93,7 @@ class HomeScreen extends StatelessWidget {
                                     alignment: Alignment.centerRight,
                                     child: HeaderButtons(
                                       onSearch: placeholderCallbackForButtons,
-                                      onAccount: placeholderCallbackForButtons,
+                                      onAccount: () => navigateToLogin(context),
                                       onCart: placeholderCallbackForButtons,
                                       onMenu: placeholderCallbackForButtons,
                                     ),
@@ -138,7 +138,7 @@ class HomeScreen extends StatelessWidget {
                                     alignment: Alignment.centerRight,
                                     child: HeaderButtons(
                                       onSearch: placeholderCallbackForButtons,
-                                      onAccount: placeholderCallbackForButtons,
+                                      onAccount: () => navigateToLogin(context),
                                       onCart: placeholderCallbackForButtons,
                                       onMenu: placeholderCallbackForButtons,
                                     ),
@@ -218,6 +218,8 @@ class HomeScreen extends StatelessWidget {
               ),
 
               // PRODUCTS SECTION
+              // EDIT: fixed syntax here – this must be a proper Container widget
+              // in the Column children list, not the bare type `Container`.
               Container(
                 color: Colors.white,
                 child: Padding(
