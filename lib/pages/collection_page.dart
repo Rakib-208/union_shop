@@ -55,48 +55,97 @@ class _CollectionExamplePageState extends State<CollectionExamplePage> {
           // FILTERS
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: _buildDropdown(
-                    label: 'Sort by',
-                    value: _selectedSort,
-                    items: const [
-                      'Featured',
-                      'Price: Low to High',
-                      'Price: High to Low',
+            // EDIT: Use LayoutBuilder so filters stack vertically on small screens
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isNarrow = constraints.maxWidth < 600;
+
+                if (isNarrow) {
+                  // MOBILE: stack filters vertically
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildDropdown(
+                        label: 'Sort by',
+                        value: _selectedSort,
+                        items: const [
+                          'Featured',
+                          'Price: Low to High',
+                          'Price: High to Low',
+                        ],
+                        onChanged: (value) {
+                          setState(() => _selectedSort = value!);
+                        },
+                      ),
+                      const SizedBox(height: 8),
+                      _buildDropdown(
+                        label: 'Size',
+                        value: _selectedSize,
+                        items: const ['All', 'S', 'M', 'L', 'XL'],
+                        onChanged: (value) {
+                          setState(() => _selectedSize = value!);
+                        },
+                      ),
+                      const SizedBox(height: 8),
+                      _buildDropdown(
+                        label: 'Colour',
+                        value: _selectedColour,
+                        items: const ['All', 'Navy', 'Black', 'Grey'],
+                        onChanged: (value) {
+                          setState(() => _selectedColour = value!);
+                        },
+                      ),
                     ],
-                    onChanged: (value) =>
-                        setState(() => _selectedSort = value!),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildDropdown(
-                    label: 'Size',
-                    value: _selectedSize,
-                    items: const ['All', 'S', 'M', 'L', 'XL'],
-                    onChanged: (value) =>
-                        setState(() => _selectedSize = value!),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildDropdown(
-                    label: 'Colour',
-                    value: _selectedColour,
-                    items: const ['All', 'Navy', 'Black', 'Grey'],
-                    onChanged: (value) =>
-                        setState(() => _selectedColour = value!),
-                  ),
-                ),
-              ],
+                  );
+                } else {
+                  // DESKTOP / LARGE: 3 dropdowns in a row
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: _buildDropdown(
+                          label: 'Sort by',
+                          value: _selectedSort,
+                          items: const [
+                            'Featured',
+                            'Price: Low to High',
+                            'Price: High to Low',
+                          ],
+                          onChanged: (value) {
+                            setState(() => _selectedSort = value!);
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildDropdown(
+                          label: 'Size',
+                          value: _selectedSize,
+                          items: const ['All', 'S', 'M', 'L', 'XL'],
+                          onChanged: (value) {
+                            setState(() => _selectedSize = value!);
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildDropdown(
+                          label: 'Colour',
+                          value: _selectedColour,
+                          items: const ['All', 'Navy', 'Black', 'Grey'],
+                          onChanged: (value) {
+                            setState(() => _selectedColour = value!);
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },
             ),
           ),
 
           const SizedBox(height: 8),
 
-          // GRID LIST
           Expanded(
             child: GridView.builder(
               padding: const EdgeInsets.all(16),
@@ -113,7 +162,6 @@ class _CollectionExamplePageState extends State<CollectionExamplePage> {
               },
             ),
           ),
-
           const Footer(),
         ],
       ),
@@ -165,7 +213,6 @@ class _CollectionProduct {
 class _CollectionProductCard extends StatelessWidget {
   final _CollectionProduct product;
 
-  // EDIT: removed unused `key` parameter to fix analyzer warning.
   const _CollectionProductCard({required this.product});
 
   @override
