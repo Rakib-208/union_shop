@@ -1,5 +1,4 @@
 // NEW: Shared product model and in-memory catalogue for the Union Shop app.
-
 enum ProductType {
   clothing,
   accessories,
@@ -12,7 +11,8 @@ class Product {
   final ProductType type;
   final List<String> sizes;
   final List<String> colours;
-  final String imageAsset;
+  final String?
+      imageAsset; // FIX: made nullable so products can exist without an image
   final double? salePrice;
 
   const Product({
@@ -22,13 +22,13 @@ class Product {
     required this.type,
     required this.sizes,
     required this.colours,
-    required this.imageAsset,
+    this.imageAsset, // FIX: image is optional; show placeholder text when null
     this.salePrice,
   });
 }
 
 // NEW: Central product catalogue (12 demo products)
-// NOTE: You can later tie these imageAsset paths to files in assets/images/.
+// NOTE: Update imageAsset fields later when you have real files in assets/images/.
 const List<Product> allProducts = [
   // 1–2: T-SHIRTS
   Product(
@@ -38,7 +38,7 @@ const List<Product> allProducts = [
     type: ProductType.clothing,
     sizes: ['S', 'M', 'L', 'XL'],
     colours: ['Navy', 'Black'],
-    imageAsset: 'assets/images/tshirt_full_sleeve.png',
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
   Product(
     id: 'tshirt_drop_shoulder',
@@ -47,7 +47,7 @@ const List<Product> allProducts = [
     type: ProductType.clothing,
     sizes: ['S', 'M', 'L', 'XL'],
     colours: ['White', 'Grey', 'Sand'],
-    imageAsset: 'assets/images/tshirt_drop_shoulder.png',
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
 
   // 3–4: SHIRTS
@@ -58,7 +58,7 @@ const List<Product> allProducts = [
     type: ProductType.clothing,
     sizes: ['S', 'M', 'L', 'XL'],
     colours: ['Light Blue', 'White'],
-    imageAsset: 'assets/images/shirt_oxford.png',
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
   Product(
     id: 'shirt_checked',
@@ -67,7 +67,7 @@ const List<Product> allProducts = [
     type: ProductType.clothing,
     sizes: ['S', 'M', 'L', 'XL'],
     colours: ['Red Check', 'Blue Check'],
-    imageAsset: 'assets/images/shirt_checked.png',
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
 
   // 5–6: PANTS
@@ -78,7 +78,7 @@ const List<Product> allProducts = [
     type: ProductType.clothing,
     sizes: ['S', 'M', 'L', 'XL'],
     colours: ['Black', 'Charcoal'],
-    imageAsset: 'assets/images/pants_joggers.png',
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
   Product(
     id: 'pants_cargo',
@@ -87,7 +87,7 @@ const List<Product> allProducts = [
     type: ProductType.clothing,
     sizes: ['S', 'M', 'L', 'XL'],
     colours: ['Olive', 'Sand'],
-    imageAsset: 'assets/images/pants_cargo.png',
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
 
   // 7–8: HOODIES
@@ -98,7 +98,7 @@ const List<Product> allProducts = [
     type: ProductType.clothing,
     sizes: ['S', 'M', 'L', 'XL'],
     colours: ['Navy', 'Grey'],
-    imageAsset: 'assets/images/hoodie_crest.png',
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
   Product(
     id: 'hoodie_oversized',
@@ -107,7 +107,7 @@ const List<Product> allProducts = [
     type: ProductType.clothing,
     sizes: ['S', 'M', 'L', 'XL'],
     colours: ['Forest Green', 'Black'],
-    imageAsset: 'assets/images/hoodie_oversized.png',
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
 
   // 9–10: JACKETS
@@ -118,7 +118,7 @@ const List<Product> allProducts = [
     type: ProductType.clothing,
     sizes: ['S', 'M', 'L', 'XL'],
     colours: ['Black', 'Teal'],
-    imageAsset: 'assets/images/jacket_windbreaker.png',
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
   Product(
     id: 'jacket_quilted',
@@ -127,7 +127,7 @@ const List<Product> allProducts = [
     type: ProductType.clothing,
     sizes: ['S', 'M', 'L', 'XL'],
     colours: ['Navy', 'Maroon'],
-    imageAsset: 'assets/images/jacket_quilted.png',
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
 
   // 11: CAP
@@ -138,7 +138,7 @@ const List<Product> allProducts = [
     type: ProductType.accessories,
     sizes: [],
     colours: ['Navy', 'Beige'],
-    imageAsset: 'assets/images/cap_structured.png',
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
 
   // 12: SUNGLASSES
@@ -149,6 +149,6 @@ const List<Product> allProducts = [
     type: ProductType.accessories,
     sizes: [],
     colours: ['Black Frame / Black Lens', 'Silver Frame / Blue Lens'],
-    imageAsset: 'assets/images/sunglasses_uv_shield.png',
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
 ];
