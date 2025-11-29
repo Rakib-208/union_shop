@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/footer.dart';
-import 'package:union_shop/product.dart'; // FIX: import shared Product model
+import 'package:union_shop/models/product.dart'; // FIX: import shared Product model
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
