@@ -5,7 +5,7 @@ import 'package:union_shop/pages/collection_page.dart';
 void main() {
   group('CollectionExamplePage', () {
     testWidgets('shows filters and product cards', (tester) async {
-      await tester.pumpWidget(const MaterialApp(home: CollectionExamplePage()));
+      await tester.pumpWidget(const MaterialApp(home: CollectionPage()));
       await tester.pump();
 
       expect(find.text('Course Hoodies Collection'), findsOneWidget);
