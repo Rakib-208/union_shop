@@ -1,19 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/buttons.dart'; // shared header buttons
 import 'package:union_shop/footer.dart';
+import 'package:union_shop/models/product.dart'; // FIX: shared Product model
 
 class ProductPage extends StatefulWidget {
-  const ProductPage({super.key});
+  // FIX: product is now passed in so this page can show real data
+  final Product product;
+
+  const ProductPage({
+    super.key,
+    required this.product,
+  });
 
   @override
   State<ProductPage> createState() => _ProductPageState();
 }
 
 class _ProductPageState extends State<ProductPage> {
-  // State for interactive controls
-  String _selectedSize = 'M';
-  String _selectedColour = 'Navy';
+  // FIX: hold a reference to the selected product
+  late Product _product;
+
+  // State for interactive controls (initialised in initState based on product)
+  late String _selectedSize;
+  late String _selectedColour;
   int _quantity = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    // FIX: capture the passed-in product and initialise dropdowns
+    _product = widget.product;
+    _selectedSize =
+        _product.sizes.isNotEmpty ? _product.sizes.first : 'One Size';
+    _selectedColour =
+        _product.colours.isNotEmpty ? _product.colours.first : 'Default';
+  }
 
   void _navigateToHome() {
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
@@ -70,6 +91,12 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    // FIX: derive dropdown options from the selected product
+    final List<String> sizeOptions =
+        _product.sizes.isNotEmpty ? _product.sizes : ['One Size'];
+    final List<String> colourOptions =
+        _product.colours.isNotEmpty ? _product.colours : ['Default'];
+
     return Scaffold(
       body: SafeArea(
         bottom: false,
@@ -93,20 +120,16 @@ class _ProductPageState extends State<ProductPage> {
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
-
-                    // Main header row
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 10,
-                        vertical: 8,
+                        vertical: 10,
                       ),
-                      // Same responsive header pattern as home_page.dart
                       child: LayoutBuilder(
                         builder: (context, constraints) {
                           final isMobile = constraints.maxWidth < 600;
 
                           if (isMobile) {
-                            // MOBILE: 45% logo, 55% buttons
                             return Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -129,12 +152,12 @@ class _ProductPageState extends State<ProductPage> {
                                     ),
                                   ),
                                 ),
+                                const SizedBox(width: 8),
                                 Expanded(
                                   flex: 55,
                                   child: Align(
                                     alignment: Alignment.centerRight,
                                     child: HeaderButtons(
-                                      // search overlay handled inside HeaderButtons
                                       onSearch: () {},
                                       onAccount: _navigateToLogin,
                                       onCart: _showCartMessage,
@@ -145,7 +168,6 @@ class _ProductPageState extends State<ProductPage> {
                               ],
                             );
                           } else {
-                            // DESKTOP / LARGE: 20% logo, 55% blank, 25% buttons
                             return Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -211,15 +233,37 @@ class _ProductPageState extends State<ProductPage> {
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Center(
-                              child: Icon(
-                                Icons.image_not_supported,
-                                color: Colors.grey,
-                              ),
+                        child: Builder(
+                          builder: (context) {
+                            // FIX: use product image when available, otherwise show placeholder text
+                            if (_product.imageAsset == null ||
+                                _product.imageAsset!.isEmpty) {
+                              return const Center(
+                                child: Text(
+                                  'No image attached',
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 14,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              );
+                            }
+                            return Image.asset(
+                              _product.imageAsset!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                  child: Text(
+                                    'No image attached',
+                                    style: TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: 14,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                );
+                              },
                             );
                           },
                         ),
@@ -228,10 +272,10 @@ class _ProductPageState extends State<ProductPage> {
 
                     const SizedBox(height: 24),
 
-                    // Product name
-                    const Text(
-                      'Placeholder Product Name',
-                      style: TextStyle(
+                    // Product name (from selected product)
+                    Text(
+                      _product.name,
+                      style: const TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                       ),
@@ -239,10 +283,10 @@ class _ProductPageState extends State<ProductPage> {
 
                     const SizedBox(height: 8),
 
-                    // Price
-                    const Text(
-                      '£15.00',
-                      style: TextStyle(
+                    // Price (from selected product)
+                    Text(
+                      '£${_product.price.toStringAsFixed(2)}',
+                      style: const TextStyle(
                         fontSize: 24,
                         color: Color(0xFF4d2963),
                         fontWeight: FontWeight.w600,
@@ -262,24 +306,14 @@ class _ProductPageState extends State<ProductPage> {
                             ),
                             // EDIT: use initialValue instead of deprecated value
                             initialValue: _selectedSize,
-                            items: const [
-                              DropdownMenuItem(
-                                value: 'S',
-                                child: Text('S'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'M',
-                                child: Text('M'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'L',
-                                child: Text('L'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'XL',
-                                child: Text('XL'),
-                              ),
-                            ],
+                            items: sizeOptions
+                                .map(
+                                  (size) => DropdownMenuItem<String>(
+                                    value: size,
+                                    child: Text(size),
+                                  ),
+                                )
+                                .toList(),
                             onChanged: (value) {
                               if (value == null) return;
                               setState(() => _selectedSize = value);
@@ -295,20 +329,14 @@ class _ProductPageState extends State<ProductPage> {
                             ),
                             // EDIT: use initialValue instead of deprecated value
                             initialValue: _selectedColour,
-                            items: const [
-                              DropdownMenuItem(
-                                value: 'Navy',
-                                child: Text('Navy'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'Black',
-                                child: Text('Black'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'Grey',
-                                child: Text('Grey'),
-                              ),
-                            ],
+                            items: colourOptions
+                                .map(
+                                  (colour) => DropdownMenuItem<String>(
+                                    value: colour,
+                                    child: Text(colour),
+                                  ),
+                                )
+                                .toList(),
                             onChanged: (value) {
                               if (value == null) return;
                               setState(() => _selectedColour = value);
@@ -352,7 +380,7 @@ class _ProductPageState extends State<ProductPage> {
 
                     const SizedBox(height: 24),
 
-                    // Action buttons (ADD TO CART / BUY NOW)
+                    // Action buttons: Add to Cart & Buy Now
                     Row(
                       children: [
                         Expanded(
@@ -368,7 +396,10 @@ class _ProductPageState extends State<ProductPage> {
                             ),
                             child: const Text(
                               'ADD TO CART',
-                              style: TextStyle(letterSpacing: 1),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
@@ -388,36 +419,14 @@ class _ProductPageState extends State<ProductPage> {
                             child: const Text(
                               'BUY NOW',
                               style: TextStyle(
-                                letterSpacing: 1,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                                 color: Color(0xFF4d2963),
                               ),
                             ),
                           ),
                         ),
                       ],
-                    ),
-
-                    const SizedBox(height: 32),
-
-                    // Product description
-                    const Text(
-                      'Description',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'This is a placeholder description for a product. In a real implementation '
-                      'this text would be replaced with product information and the page would '
-                      'be wired up to live data.',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                        height: 1.5,
-                      ),
                     ),
                   ],
                 ),

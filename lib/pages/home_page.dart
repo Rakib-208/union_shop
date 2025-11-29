@@ -66,9 +66,7 @@ class HomeScreen extends StatelessWidget {
                           final isMobile = constraints.maxWidth < 600;
 
                           if (isMobile) {
-                            // MOBILE LAYOUT:
-                            //  - 45% width for logo (left)
-                            //  - 55% width for buttons (right)
+                            // MOBILE LAYOUT
                             return Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -107,10 +105,7 @@ class HomeScreen extends StatelessWidget {
                               ],
                             );
                           } else {
-                            // DESKTOP / LARGE SCREEN LAYOUT:
-                            //  - 20% width for logo (left)
-                            //  - 55% width blank middle
-                            //  - 25% width for buttons (right)
+                            // DESKTOP / LARGE SCREEN LAYOUT
                             return Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -178,8 +173,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      // FIX: use brand purple overlay instead of generic black
-                      // and avoid deprecated withOpacity
+                      // FIX: brand purple overlay
                       color: const Color(0xAA4d2963),
                     ),
                     Center(
@@ -278,15 +272,17 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-// UPDATED: ProductCard now uses Product model and handles missing images
+// UPDATED: ProductCard now uses Product model and passes it into ProductPage
 class ProductCard extends StatelessWidget {
   // FIX: now driven by Product model instead of loose title/price/image strings
+  final Product product;
   final String title;
   final String price;
   final String? imageAssetPath;
 
   const ProductCard({
     super.key,
+    required this.product, // FIX: hold full product for navigation
     required this.title,
     required this.price,
     this.imageAssetPath,
@@ -295,6 +291,7 @@ class ProductCard extends StatelessWidget {
   // FIX: convenience factory to create a card directly from a Product
   factory ProductCard.fromProduct(Product product) {
     return ProductCard(
+      product: product,
       title: product.name,
       price: '£${product.price.toStringAsFixed(2)}',
       imageAssetPath: product.imageAsset,
@@ -305,7 +302,12 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/product');
+        // FIX: pass the selected product into the product page via route arguments
+        Navigator.pushNamed(
+          context,
+          '/product',
+          arguments: product,
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -7,6 +7,7 @@ import 'package:union_shop/pages/signup_page.dart';
 import 'package:union_shop/pages/collections_page.dart';
 import 'package:union_shop/pages/collection_page.dart';
 import 'package:union_shop/pages/sale_collection_page.dart';
+import 'package:union_shop/models/product.dart'; // FIX: for typed product route
 
 void main() {
   runApp(const UnionShopApp());
@@ -21,21 +22,27 @@ class UnionShopApp extends StatelessWidget {
       title: 'Union Shop',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF4d2963),
+        primaryColor: const Color(0xFF4d2963),
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: const Color(0xFF4d2963),
+          secondary: const Color(0xFF4d2963),
         ),
+        fontFamily: 'Roboto',
       ),
-
-      // App entry point: HomeScreen from home_page.dart
       home: const HomeScreen(),
 
       // Named routes used elsewhere in the app
       routes: {
-        '/product': (context) => const ProductPage(),
+        // FIX: read Product argument and pass into ProductPage
+        '/product': (context) {
+          final product =
+              ModalRoute.of(context)!.settings.arguments as Product;
+          return ProductPage(product: product); // FIX: pass selected product into page
+        },
         '/login': (context) => const LoginPage(),
         '/about': (context) => const AboutUsPage(),
         '/collections': (context) => const CollectionsPage(),
-        '/collection': (context) => const CollectionPage(),
+        '/collection-example': (context) => const CollectionPage(),
         '/sale': (context) => const SaleCollectionPage(),
         SignupPage.routeName: (context) => const SignupPage(),
       },
