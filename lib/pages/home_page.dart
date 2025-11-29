@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:union_shop/buttons.dart'; // added
-import 'package:union_shop/footer.dart'; // added
+import 'package:union_shop/buttons.dart';
+import 'package:union_shop/footer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -13,8 +13,12 @@ class HomeScreen extends StatelessWidget {
     Navigator.pushNamed(context, '/product');
   }
 
+  void navigateToCollections(BuildContext context) {
+    Navigator.pushNamed(context, '/collections');
+  }
+
   void placeholderCallbackForButtons() {
-    // This is the event handler for buttons that don't work yet
+    // This is the event handler for header buttons that don't need behaviour yet
   }
 
   @override
@@ -29,52 +33,53 @@ class HomeScreen extends StatelessWidget {
               color: Colors.white,
               child: Column(
                 children: [
+                  // Top banner
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     color: const Color(0xFF4d2963),
                     child: const Text(
-                      'BIG SALE! OUR Products HAS DROPPED IN PRICE! OVER 20% OFF! COME GRAB YOURS WHILE STOCK LASTS!',
+                      'BIG SALE! OUR PRODUCTS HAVE DROPPED IN PRICE! OVER 20% OFF! COME GRAB YOURS WHILE STOCK LASTS!',
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                   ),
+
+                  // Main header row
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Row(
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              navigateToHome(context);
-                            },
-                            child: Image.network(
-                              'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
-                              height: 18,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  color: Colors.grey[300],
-                                  width: 18,
-                                  height: 18,
-                                  child: const Center(
-                                    child: Icon(Icons.image_not_supported,
-                                        color: Colors.grey),
+                            onTap: () => navigateToHome(context),
+                            child: Row(
+                              children: [
+                                Image.network(
+                                  'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
+                                  height: 40,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(Icons.store,
+                                          color: Colors.grey),
+                                ),
+                                const SizedBox(width: 12),
+                                const Text(
+                                  'Union Shop',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF4d2963),
                                   ),
-                                );
-                              },
+                                ),
+                              ],
                             ),
                           ),
                           const Spacer(),
-                          ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 600),
-                            child: HeaderButtons(
-                              onSearch: placeholderCallbackForButtons,
-                              onAccount: () =>
-                                  Navigator.pushNamed(context, '/login'),
-                              onCart: placeholderCallbackForButtons,
-                              onMenu: placeholderCallbackForButtons,
-                            ),
+                          HeaderButtons(
+                            onSearch: placeholderCallbackForButtons,
+                            onAccount: placeholderCallbackForButtons,
+                            onCart: placeholderCallbackForButtons,
+                            onMenu: placeholderCallbackForButtons,
                           ),
                         ],
                       ),
@@ -83,6 +88,7 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
+
             // Hero Section
             SizedBox(
               height: 400,
@@ -99,49 +105,53 @@ class HomeScreen extends StatelessWidget {
                           fit: BoxFit.cover,
                         ),
                       ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.7),
-                        ),
-                      ),
                     ),
                   ),
-                  Positioned(
-                    left: 24,
-                    right: 24,
-                    top: 80,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Placeholder Hero Title',
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            height: 1.2,
-                          ),
+                  Container(
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                  Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 700),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Placeholder Hero Title',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                height: 1.2,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'This is placeholder text for the hero section.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                height: 1.5,
+                              ),
+                            ),
+                            const SizedBox(height: 32),
+                            BrowseProductsButton(
+                              onPressed: () => navigateToCollections(context),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          "This is placeholder text for the hero section.",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            height: 1.5,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 32),
-                        BrowseProductsButton(
-                          onPressed: placeholderCallbackForButtons,
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
+
             // Products Section
             Container(
               color: Colors.white,
@@ -158,44 +168,52 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 48),
-                    GridView.count(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisCount:
-                          MediaQuery.of(context).size.width > 600 ? 2 : 1,
-                      crossAxisSpacing: 24,
-                      mainAxisSpacing: 48,
-                      children: const [
-                        ProductCard(
-                          title: 'Placeholder Product 1',
-                          price: '£10.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                        ProductCard(
-                          title: 'Placeholder Product 2',
-                          price: '£15.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                        ProductCard(
-                          title: 'Placeholder Product 3',
-                          price: '£20.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                        ProductCard(
-                          title: 'Placeholder Product 4',
-                          price: '£25.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                      ],
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final isWide = constraints.maxWidth > 600;
+                        final crossAxisCount = isWide ? 4 : 2;
+                        return GridView.count(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          crossAxisCount: crossAxisCount,
+                          mainAxisSpacing: 24,
+                          crossAxisSpacing: 24,
+                          childAspectRatio: 3 / 4,
+                          children: const [
+                            ProductCard(
+                              title: 'Placeholder Product 1',
+                              price: '£10.00',
+                              imageUrl:
+                                  'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+                            ),
+                            ProductCard(
+                              title: 'Placeholder Product 2',
+                              price: '£15.00',
+                              imageUrl:
+                                  'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+                            ),
+                            ProductCard(
+                              title: 'Placeholder Product 3',
+                              price: '£20.00',
+                              imageUrl:
+                                  'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+                            ),
+                            ProductCard(
+                              title: 'Placeholder Product 4',
+                              price: '£25.00',
+                              imageUrl:
+                                  'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ],
                 ),
               ),
             ),
+
+            // Shared footer
             const Footer(),
           ],
         ),
