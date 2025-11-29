@@ -19,104 +19,38 @@ class HeaderButtons extends StatefulWidget {
 }
 
 class _HeaderButtonsState extends State<HeaderButtons> {
-  OverlayEntry? _searchOverlayEntry;
-  final TextEditingController _searchController = TextEditingController();
-
   void _showSearchOverlay() {
-    if (_searchOverlayEntry != null) return;
-
-    _searchOverlayEntry = OverlayEntry(
+    showDialog<void>(
+      context: context,
       builder: (context) {
-        return Stack(
-          children: [
-            // Full-screen translucent area to detect outside taps
-            Positioned.fill(
-              child: Listener(
-                behavior: HitTestBehavior.translucent,
-                onPointerDown: (PointerDownEvent e) {
-                  // Determine if tap is outside the search box by layout bounds
-                  // Since we don't have the box rect here, close immediately,
-                  // then forward the original pointer down so underlying widgets receive it.
-                  _removeSearchOverlay();
-                  // Forward the original event to underlying widgets
-                  WidgetsBinding.instance.handlePointerEvent(e);
-                },
-              ),
+        return AlertDialog(
+          title: const Text('Search'),
+          content: const TextField(
+            decoration: InputDecoration(
+              hintText: 'Search products…',
+              border: OutlineInputBorder(),
             ),
-            // Top search bar
-            Positioned(
-              top: 60,
-              left: 0,
-              right: 0,
-              child: Material(
-                color: Colors.transparent,
-                child: SafeArea(
-                  bottom: false,
-                  child: Container(
-                    color: Colors.white,
-                    // Reduce vertical padding to shrink height
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _searchController,
-                            decoration: const InputDecoration(
-                              hintText: 'Search...',
-                              border: OutlineInputBorder(),
-                              isDense: true,
-                              // Reduce content padding for a shorter field
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 6),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        IconButton(
-                          icon: const Icon(Icons.search, color: Colors.grey),
-                          tooltip: 'Go',
-                          onPressed: () {
-                            // Navigate to home page using existing '/' route.
-                            Navigator.of(context).pushNamed('/');
-                            _removeSearchOverlay();
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close, color: Colors.grey),
-                          tooltip: 'Close',
-                          onPressed: _removeSearchOverlay,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
             ),
           ],
         );
       },
     );
-
-    Overlay.of(context).insert(_searchOverlayEntry!);
-  }
-
-  void _removeSearchOverlay() {
-    _searchOverlayEntry?.remove();
-    _searchOverlayEntry = null;
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    _removeSearchOverlay();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
+    // EDIT: Changed Row → Wrap to avoid RenderFlex overflow on very small widths.
+    // Wrap allows the icon buttons to flow onto a second "line" instead of
+    // overflowing horizontally when there is not enough space.
+    return Wrap(
+      alignment: WrapAlignment.end,
+      spacing: 0,
+      runSpacing: 0,
       children: [
         IconButton(
           icon: const Icon(Icons.search, size: 18, color: Colors.grey),
@@ -136,8 +70,11 @@ class _HeaderButtonsState extends State<HeaderButtons> {
           onPressed: widget.onAccount,
         ),
         IconButton(
-          icon: const Icon(Icons.shopping_bag_outlined,
-              size: 18, color: Colors.grey),
+          icon: const Icon(
+            Icons.shopping_bag_outlined,
+            size: 18,
+            color: Colors.grey,
+          ),
           tooltip: 'Cart',
           padding: const EdgeInsets.all(8),
           constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
@@ -155,9 +92,10 @@ class _HeaderButtonsState extends State<HeaderButtons> {
             } else if (value == 1) {
               Navigator.of(context).pushNamed('/about');
             }
+            widget.onMenu();
           },
-          itemBuilder: (context) => [
-            const PopupMenuItem<int>(
+          itemBuilder: (context) => const [
+            PopupMenuItem<int>(
               value: 0,
               child: Row(
                 children: [
@@ -167,7 +105,7 @@ class _HeaderButtonsState extends State<HeaderButtons> {
                 ],
               ),
             ),
-            const PopupMenuItem<int>(
+            PopupMenuItem<int>(
               value: 1,
               child: Row(
                 children: [
@@ -178,28 +116,40 @@ class _HeaderButtonsState extends State<HeaderButtons> {
               ),
             ),
           ],
-        )
+        ),
       ],
     );
   }
 }
 
+// EDIT: Reintroduced BrowseProductsButton so HomeScreen can use it in the hero.
 class BrowseProductsButton extends StatelessWidget {
   final VoidCallback onPressed;
-  const BrowseProductsButton({super.key, required this.onPressed});
+
+  const BrowseProductsButton({
+    super.key,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF4d2963),
-        foregroundColor: Colors.white,
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        backgroundColor: Colors.white,
+        foregroundColor: const Color(0xFF4d2963),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero,
+        ),
       ),
       child: const Text(
         'BROWSE PRODUCTS',
-        style: TextStyle(fontSize: 14, letterSpacing: 1),
+        style: TextStyle(
+          letterSpacing: 1.2,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
