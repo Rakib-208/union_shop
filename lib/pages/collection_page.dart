@@ -180,7 +180,7 @@ class _CollectionExamplePageState extends State<CollectionExamplePage> {
         Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
         const SizedBox(height: 4),
         DropdownButtonFormField<String>(
-          value: value,
+          initialValue: value,
           items: items
               .map(
                 (v) => DropdownMenuItem<String>(
