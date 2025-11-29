@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:union_shop/buttons.dart'; // EDIT: use shared header buttons
+import 'package:union_shop/buttons.dart'; // shared header buttons
 import 'package:union_shop/footer.dart';
 
 class ProductPage extends StatefulWidget {
@@ -100,8 +100,7 @@ class _ProductPageState extends State<ProductPage> {
                         horizontal: 10,
                         vertical: 8,
                       ),
-                      // EDIT: same responsive header pattern as home_page.dart,
-                      // but using shared HeaderButtons instead of custom Row.
+                      // Same responsive header pattern as home_page.dart
                       child: LayoutBuilder(
                         builder: (context, constraints) {
                           final isMobile = constraints.maxWidth < 600;
@@ -135,8 +134,7 @@ class _ProductPageState extends State<ProductPage> {
                                   child: Align(
                                     alignment: Alignment.centerRight,
                                     child: HeaderButtons(
-                                      // search overlay is already implemented
-                                      // inside HeaderButtons; we don't need extra work here.
+                                      // search overlay handled inside HeaderButtons
                                       onSearch: () {},
                                       onAccount: _navigateToLogin,
                                       onCart: _showCartMessage,
@@ -262,7 +260,8 @@ class _ProductPageState extends State<ProductPage> {
                               labelText: 'Size',
                               border: OutlineInputBorder(),
                             ),
-                            value: _selectedSize,
+                            // EDIT: use initialValue instead of deprecated value
+                            initialValue: _selectedSize,
                             items: const [
                               DropdownMenuItem(
                                 value: 'S',
@@ -294,7 +293,8 @@ class _ProductPageState extends State<ProductPage> {
                               labelText: 'Colour',
                               border: OutlineInputBorder(),
                             ),
-                            value: _selectedColour,
+                            // EDIT: use initialValue instead of deprecated value
+                            initialValue: _selectedColour,
                             items: const [
                               DropdownMenuItem(
                                 value: 'Navy',
