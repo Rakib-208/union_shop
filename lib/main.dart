@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:union_shop/home_page.dart';
-import 'package:union_shop/product_page.dart';
-import 'package:union_shop/login_page.dart';
-import 'package:union_shop/aboutus.dart';
-import 'package:union_shop/signup_page.dart';
+import 'package:union_shop/pages/home_page.dart';
+import 'package:union_shop/pages/product_page.dart';
+import 'package:union_shop/pages/login_page.dart';
+import 'package:union_shop/pages/aboutus_page.dart';
+import 'package:union_shop/pages/signup_page.dart';
 
 void main() {
   runApp(const UnionShopApp());
