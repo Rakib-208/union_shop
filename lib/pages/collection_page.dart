@@ -15,10 +15,34 @@ class _CollectionPageState extends State<CollectionPage> {
   String _selectedSize = 'All';
   String _selectedColour = 'All';
 
+  double _effectivePrice(Product product) => product.salePrice ?? product.price;
+
+  List<Product> _filteredAndSortedProducts() {
+    final List<Product> filtered = allProducts.where((product) {
+      final bool matchesSize =
+          _selectedSize == 'All' || product.sizes.contains(_selectedSize);
+      final bool matchesColour =
+          _selectedColour == 'All' || product.colours.contains(_selectedColour);
+      return matchesSize && matchesColour;
+    }).toList();
+
+    if (_selectedSort == 'Price: Low to High') {
+      filtered.sort(
+        (a, b) => _effectivePrice(a).compareTo(_effectivePrice(b)),
+      );
+    } else if (_selectedSort == 'Price: High to Low') {
+      filtered.sort(
+        (a, b) => _effectivePrice(b).compareTo(_effectivePrice(a)),
+      );
+    }
+
+    return filtered;
+  }
+
   @override
   Widget build(BuildContext context) {
     // For now, just show all products in this collection.
-    final List<Product> products = allProducts.toList();
+    final List<Product> products = _filteredAndSortedProducts();
 
     return Scaffold(
       appBar: AppBar(
@@ -48,51 +72,13 @@ class _CollectionPageState extends State<CollectionPage> {
 
                 // Filters (responsive using inner LayoutBuilder)
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.all(16),
                   child: LayoutBuilder(
                     builder: (context, innerConstraints) {
-                      final isNarrow = innerConstraints.maxWidth < 600;
+                      final bool isFilterWide = innerConstraints.maxWidth > 600;
 
-                      if (isNarrow) {
-                        // Mobile / narrow: filters stacked vertically
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            _buildDropdown(
-                              label: 'Sort by',
-                              value: _selectedSort,
-                              items: const [
-                                'Featured',
-                                'Price: Low to High',
-                                'Price: High to Low',
-                              ],
-                              onChanged: (value) {
-                                setState(() => _selectedSort = value!);
-                              },
-                            ),
-                            const SizedBox(height: 8),
-                            _buildDropdown(
-                              label: 'Size',
-                              value: _selectedSize,
-                              items: const ['All', 'S', 'M', 'L', 'XL'],
-                              onChanged: (value) {
-                                setState(() => _selectedSize = value!);
-                              },
-                            ),
-                            const SizedBox(height: 8),
-                            _buildDropdown(
-                              label: 'Colour',
-                              value: _selectedColour,
-                              items: const ['All', 'Navy', 'Black', 'Grey'],
-                              onChanged: (value) {
-                                setState(() => _selectedColour = value!);
-                              },
-                            ),
-                          ],
-                        );
-                      } else {
-                        // Wider layout: filters in a row
+                      if (isFilterWide) {
+                        // Row layout for filters
                         return Row(
                           children: [
                             Expanded(
@@ -109,7 +95,7 @@ class _CollectionPageState extends State<CollectionPage> {
                                 },
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: 16),
                             Expanded(
                               child: _buildDropdown(
                                 label: 'Size',
@@ -120,7 +106,7 @@ class _CollectionPageState extends State<CollectionPage> {
                                 },
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: 16),
                             Expanded(
                               child: _buildDropdown(
                                 label: 'Colour',
@@ -133,8 +119,61 @@ class _CollectionPageState extends State<CollectionPage> {
                             ),
                           ],
                         );
+                      } else {
+                        // Column layout for filters on narrow screens
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _buildDropdown(
+                              label: 'Sort by',
+                              value: _selectedSort,
+                              items: const [
+                                'Featured',
+                                'Price: Low to High',
+                                'Price: High to Low',
+                              ],
+                              onChanged: (value) {
+                                setState(() => _selectedSort = value!);
+                              },
+                            ),
+                            const SizedBox(height: 12),
+                            _buildDropdown(
+                              label: 'Size',
+                              value: _selectedSize,
+                              items: const ['All', 'S', 'M', 'L', 'XL'],
+                              onChanged: (value) {
+                                setState(() => _selectedSize = value!);
+                              },
+                            ),
+                            const SizedBox(height: 12),
+                            _buildDropdown(
+                              label: 'Colour',
+                              value: _selectedColour,
+                              items: const ['All', 'Navy', 'Black', 'Grey'],
+                              onChanged: (value) {
+                                setState(() => _selectedColour = value!);
+                              },
+                            ),
+                          ],
+                        );
                       }
                     },
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                // Total products count for the current filter
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Total products: ${products.length}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
 
@@ -147,8 +186,8 @@ class _CollectionPageState extends State<CollectionPage> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     crossAxisCount: crossAxisCount,
-                    mainAxisSpacing: 24,
-                    crossAxisSpacing: 24,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
                     childAspectRatio: 3 / 4,
                     children: [
                       for (final product in products)
@@ -159,7 +198,6 @@ class _CollectionPageState extends State<CollectionPage> {
 
                 const SizedBox(height: 24),
 
-                // Footer at the end of the scroll
                 const Footer(),
               ],
             ),
@@ -178,10 +216,14 @@ class _CollectionPageState extends State<CollectionPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(label),
         const SizedBox(height: 4),
         DropdownButtonFormField<String>(
           initialValue: value,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          ),
           items: items
               .map(
                 (item) => DropdownMenuItem(
