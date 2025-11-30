@@ -1,28 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/footer.dart';
+import 'package:union_shop/models/product.dart';
 
 class SaleCollectionPage extends StatelessWidget {
   const SaleCollectionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const saleProducts = [
-      _SaleProduct(
-        name: 'Portsmouth Scarf',
-        originalPrice: '£20.00',
-        salePrice: '£14.00',
-      ),
-      _SaleProduct(
-        name: 'Logo Hoodie',
-        originalPrice: '£40.00',
-        salePrice: '£30.00',
-      ),
-      _SaleProduct(
-        name: 'Campus Mug',
-        originalPrice: '£10.00',
-        salePrice: '£6.00',
-      ),
-    ];
+    // Pull all products with a sale price from the shared catalogue.
+    final List<Product> saleProducts =
+        allProducts.where((p) => p.salePrice != null).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -45,23 +32,14 @@ class SaleCollectionPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'LIMITED TIME SALE',
+                  'Limited-time sale',
                   style: TextStyle(
                     color: Colors.white,
-                    letterSpacing: 2,
-                    fontSize: 14,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(height: 8),
-                Text(
-                  'Up to 30% off selected Union Shop lines',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                SizedBox(height: 4),
                 Text(
                   'Dummy sale collection with hardcoded prices for coursework purposes.',
                   style: TextStyle(color: Colors.white),
@@ -86,26 +64,20 @@ class SaleCollectionPage extends StatelessWidget {
   }
 }
 
-class _SaleProduct {
-  final String name;
-  final String originalPrice;
-  final String salePrice;
-
-  const _SaleProduct({
-    required this.name,
-    required this.originalPrice,
-    required this.salePrice,
-  });
-}
-
 class _SaleCard extends StatelessWidget {
-  final _SaleProduct product;
+  final Product product;
 
   // EDIT: removed unused `key` parameter from constructor to fix analyzer warning.
   const _SaleCard({required this.product});
 
   @override
   Widget build(BuildContext context) {
+    final String originalPrice = '£${product.price.toStringAsFixed(2)}';
+    final String salePrice = '£${product.discountPrice.toStringAsFixed(2)}';
+    final String? discountLabel = product.discountPercentage != null
+        ? '-${product.discountPercentage!.toStringAsFixed(0)}%'
+        : null;
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
@@ -117,7 +89,7 @@ class _SaleCard extends StatelessWidget {
         subtitle: Row(
           children: [
             Text(
-              product.originalPrice,
+              originalPrice,
               style: const TextStyle(
                 decoration: TextDecoration.lineThrough,
                 color: Colors.grey,
@@ -125,7 +97,7 @@ class _SaleCard extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Text(
-              product.salePrice,
+              discountLabel != null ? '$salePrice ($discountLabel)' : salePrice,
               style: const TextStyle(
                 color: Colors.redAccent,
                 fontWeight: FontWeight.bold,
