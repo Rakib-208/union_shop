@@ -31,7 +31,7 @@ class CollectionsPage extends StatelessWidget {
         title: 'On Sale',
         description:
             'Best offers from the catalogue using the shared product list.',
-        routeName: '/sale-collection',
+        routeName: '/sale', // navigates to SaleCollectionPage
       ),
       _CollectionData(
         title: 'All Products',
