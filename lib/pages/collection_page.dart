@@ -41,7 +41,7 @@ class _CollectionPageState extends State<CollectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    // For now, just show all products in this collection.
+    // Use current filters + sort to drive the collection view.
     final List<Product> products = _filteredAndSortedProducts();
 
     return Scaffold(
@@ -216,14 +216,11 @@ class _CollectionPageState extends State<CollectionPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label),
+        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
         DropdownButtonFormField<String>(
           initialValue: value,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          ),
+          isExpanded: true,
           items: items
               .map(
                 (item) => DropdownMenuItem(
