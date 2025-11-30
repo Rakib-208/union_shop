@@ -55,8 +55,8 @@ class HomeScreen extends StatelessWidget {
                 constraints: const BoxConstraints(maxWidth: fixedWidth),
                 child: Column(
                   children: [
-                    const TopPromo(),
                     const AppHeader(),
+                    const TopPromo(),
                     Expanded(
                       child: SingleChildScrollView(
                         child: Column(
