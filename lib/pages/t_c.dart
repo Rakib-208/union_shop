@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:union_shop/buttons.dart';
-import 'package:union_shop/footer.dart';
-import 'package:union_shop/header.dart';
+import 'package:union_shop/widgets/buttons.dart';
+import 'package:union_shop/widgets/footer.dart';
+import 'package:union_shop/widgets/header.dart';
 
 class TermsAndConditionsPage extends StatelessWidget {
   const TermsAndConditionsPage({super.key});

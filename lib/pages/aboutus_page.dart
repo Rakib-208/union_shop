@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:union_shop/footer.dart';
+import 'package:union_shop/widgets/footer.dart';
 
 class AboutUsPage extends StatelessWidget {
   const AboutUsPage({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:union_shop/buttons.dart'; // shared header buttons
-import 'package:union_shop/footer.dart';
+import 'package:union_shop/widgets/buttons.dart'; // shared header buttons
+import 'package:union_shop/widgets/footer.dart';
 import 'package:union_shop/models/product.dart'; // FIX: shared Product model
 
 class ProductPage extends StatefulWidget {
