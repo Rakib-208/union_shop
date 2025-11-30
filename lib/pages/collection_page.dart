@@ -222,7 +222,7 @@ class _CollectionPageState extends State<CollectionPage> {
         Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
         DropdownButtonFormField<String>(
-          value: value,
+          initialValue: value,
           isExpanded: true,
           items: items
               .map(
