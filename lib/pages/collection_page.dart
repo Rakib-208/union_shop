@@ -15,7 +15,7 @@ class _CollectionPageState extends State<CollectionPage> {
   String _selectedSize = 'All';
   String _selectedColour = 'All';
 
-  double _effectivePrice(Product product) => product.salePrice ?? product.price;
+  double _effectivePrice(Product product) => product.discountPrice;
 
   List<Product> _filteredAndSortedProducts() {
     final List<Product> filtered = allProducts.where((product) {
@@ -78,8 +78,9 @@ class _CollectionPageState extends State<CollectionPage> {
                       final bool isFilterWide = innerConstraints.maxWidth > 600;
 
                       if (isFilterWide) {
-                        // Row layout for filters
+                        // Row layout for filters on wide screens
                         return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
                               child: _buildDropdown(
@@ -91,7 +92,8 @@ class _CollectionPageState extends State<CollectionPage> {
                                   'Price: High to Low',
                                 ],
                                 onChanged: (value) {
-                                  setState(() => _selectedSort = value!);
+                                  if (value == null) return;
+                                  setState(() => _selectedSort = value);
                                 },
                               ),
                             ),
@@ -102,7 +104,8 @@ class _CollectionPageState extends State<CollectionPage> {
                                 value: _selectedSize,
                                 items: const ['All', 'S', 'M', 'L', 'XL'],
                                 onChanged: (value) {
-                                  setState(() => _selectedSize = value!);
+                                  if (value == null) return;
+                                  setState(() => _selectedSize = value);
                                 },
                               ),
                             ),
@@ -111,9 +114,17 @@ class _CollectionPageState extends State<CollectionPage> {
                               child: _buildDropdown(
                                 label: 'Colour',
                                 value: _selectedColour,
-                                items: const ['All', 'Navy', 'Black', 'Grey'],
+                                items: const [
+                                  'All',
+                                  'Navy',
+                                  'Black',
+                                  'Grey',
+                                  'Red',
+                                  'Green'
+                                ],
                                 onChanged: (value) {
-                                  setState(() => _selectedColour = value!);
+                                  if (value == null) return;
+                                  setState(() => _selectedColour = value);
                                 },
                               ),
                             ),
@@ -133,7 +144,8 @@ class _CollectionPageState extends State<CollectionPage> {
                                 'Price: High to Low',
                               ],
                               onChanged: (value) {
-                                setState(() => _selectedSort = value!);
+                                if (value == null) return;
+                                setState(() => _selectedSort = value);
                               },
                             ),
                             const SizedBox(height: 12),
@@ -142,16 +154,25 @@ class _CollectionPageState extends State<CollectionPage> {
                               value: _selectedSize,
                               items: const ['All', 'S', 'M', 'L', 'XL'],
                               onChanged: (value) {
-                                setState(() => _selectedSize = value!);
+                                if (value == null) return;
+                                setState(() => _selectedSize = value);
                               },
                             ),
                             const SizedBox(height: 12),
                             _buildDropdown(
                               label: 'Colour',
                               value: _selectedColour,
-                              items: const ['All', 'Navy', 'Black', 'Grey'],
+                              items: const [
+                                'All',
+                                'Navy',
+                                'Black',
+                                'Grey',
+                                'Red',
+                                'Green'
+                              ],
                               onChanged: (value) {
-                                setState(() => _selectedColour = value!);
+                                if (value == null) return;
+                                setState(() => _selectedColour = value);
                               },
                             ),
                           ],
@@ -161,25 +182,7 @@ class _CollectionPageState extends State<CollectionPage> {
                   ),
                 ),
 
-                const SizedBox(height: 8),
-
-                // Total products count for the current filter
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Total products: ${products.length}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 8),
-
-                // Grid of products – same visual style as home page
+                // Product grid
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: GridView.count(
@@ -219,7 +222,7 @@ class _CollectionPageState extends State<CollectionPage> {
         Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
         DropdownButtonFormField<String>(
-          initialValue: value,
+          value: value,
           isExpanded: true,
           items: items
               .map(
