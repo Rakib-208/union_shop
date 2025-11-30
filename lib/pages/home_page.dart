@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:union_shop/buttons.dart';
 import 'package:union_shop/footer.dart';
 import 'package:union_shop/models/product.dart';
+import 'package:union_shop/header.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -254,6 +255,7 @@ class HomeScreen extends StatelessWidget {
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
+                            const HomeHeaderBanner(),
                             SizedBox(
                               height: 400,
                               width: double.infinity,
