@@ -1,8 +1,8 @@
 // lib/header.dart
 import 'package:flutter/material.dart';
 
-class HomeHeaderBanner extends StatelessWidget {
-  const HomeHeaderBanner({super.key});
+class TopPromo extends StatelessWidget {
+  const TopPromo({super.key});
 
   void _navigateToSaleCollection(BuildContext context) {
     Navigator.pushNamed(context, '/sale');
