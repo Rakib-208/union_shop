@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/buttons.dart';
 import 'package:union_shop/footer.dart';
-import 'package:union_shop/models/product.dart'; // FIX: import shared Product model for home products
+import 'package:union_shop/models/product.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -14,267 +14,757 @@ class HomeScreen extends StatelessWidget {
     Navigator.pushNamed(context, '/product');
   }
 
-  void navigateToCollections(BuildContext context) {
-    Navigator.pushNamed(context, '/collections');
-  }
-
   void navigateToLogin(BuildContext context) {
     Navigator.pushNamed(context, '/login');
   }
 
+  void navigateToSignup(BuildContext context) {
+    Navigator.pushNamed(context, '/signup');
+  }
+
+  void navigateToCollections(BuildContext context) {
+    Navigator.pushNamed(context, '/collections');
+  }
+
+  void navigateToSaleCollections(BuildContext context) {
+    Navigator.pushNamed(context, '/sale');
+  }
+
+  void navigateToAboutUs(BuildContext context) {
+    Navigator.pushNamed(context, '/about');
+  }
+
   void placeholderCallbackForButtons() {
-    // This is the event handler for header buttons that don't need behaviour yet
+    // Placeholder for the button callbacks, you can customize this later if needed
   }
 
   @override
   Widget build(BuildContext context) {
+    const double fixedWidth = 1100;
+
     return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // HEADER
-              Container(
-                color: Colors.white,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobile = constraints.maxWidth < 600;
+
+          return Container(
+            color: Colors.white,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: fixedWidth),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Top banner (restored)
                     Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      color: const Color(0xFF4d2963),
-                      child: const Text(
-                        'BIG SALE! OUR PRODUCTS HAVE DROPPED IN PRICE! OVER 20% OFF! COME GRAB YOURS WHILE STOCK LASTS!',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-
-                    // Main header row
-                    Padding(
+                      color: Colors.white,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 10,
+                        horizontal: 16,
                       ),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          final isMobile = constraints.maxWidth < 600;
-
-                          if (isMobile) {
-                            // MOBILE LAYOUT
-                            return Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  flex: 45,
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: GestureDetector(
-                                      onTap: () => navigateToHome(context),
-                                      child: Image.network(
-                                        'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
-                                        height: 32,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                const Icon(
-                                          Icons.store,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  flex: 55,
-                                  child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: HeaderButtons(
-                                      onSearch: placeholderCallbackForButtons,
-                                      onAccount: () => navigateToLogin(context),
-                                      onCart: placeholderCallbackForButtons,
-                                      onMenu: placeholderCallbackForButtons,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          } else {
-                            // DESKTOP / LARGE SCREEN LAYOUT
-                            return Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  flex: 20,
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: GestureDetector(
-                                      onTap: () => navigateToHome(context),
-                                      child: Image.network(
-                                        'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
-                                        height: 40,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                const Icon(
-                                          Icons.store,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Expanded(
-                                  flex: 55,
-                                  child: SizedBox.shrink(),
-                                ),
-                                Expanded(
-                                  flex: 25,
-                                  child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: HeaderButtons(
-                                      onSearch: placeholderCallbackForButtons,
-                                      onAccount: () => navigateToLogin(context),
-                                      onCart: placeholderCallbackForButtons,
-                                      onMenu: placeholderCallbackForButtons,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // HERO SECTION
-              SizedBox(
-                height: 400,
-                width: double.infinity,
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 10,
                             ),
-                            fit: BoxFit.cover,
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final isMobile = constraints.maxWidth < 600;
+
+                                if (isMobile) {
+                                  return Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        flex: 45,
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: GestureDetector(
+                                            onTap: () =>
+                                                navigateToHome(context),
+                                            child: Image.network(
+                                              'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
+                                              height: 32,
+                                              errorBuilder: (context, error,
+                                                      stackTrace) =>
+                                                  const Icon(
+                                                Icons.store,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        flex: 55,
+                                        child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: HeaderButtons(
+                                            onSearch:
+                                                placeholderCallbackForButtons,
+                                            onAccount: () =>
+                                                navigateToLogin(context),
+                                            onCart:
+                                                placeholderCallbackForButtons,
+                                            onMenu:
+                                                placeholderCallbackForButtons,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  return Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        flex: 20,
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: GestureDetector(
+                                            onTap: () =>
+                                                navigateToHome(context),
+                                            child: Image.network(
+                                              'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
+                                              height: 40,
+                                              errorBuilder: (context, error,
+                                                      stackTrace) =>
+                                                  const Icon(
+                                                Icons.store,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        flex: 40,
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () =>
+                                                    navigateToHome(context),
+                                                child: const Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 12,
+                                                  ),
+                                                  child: Text(
+                                                    'Home',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () =>
+                                                    navigateToCollections(
+                                                        context),
+                                                child: const Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 12,
+                                                  ),
+                                                  child: Text(
+                                                    'Collections',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () =>
+                                                    navigateToSaleCollections(
+                                                        context),
+                                                child: const Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 12,
+                                                  ),
+                                                  child: Text(
+                                                    'Sale',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () =>
+                                                    navigateToAboutUs(context),
+                                                child: const Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 12,
+                                                  ),
+                                                  child: Text(
+                                                    'About Us',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      const Expanded(
+                                        flex: 20,
+                                        child: SizedBox.shrink(),
+                                      ),
+                                      Expanded(
+                                        flex: 20,
+                                        child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: HeaderButtons(
+                                            onSearch:
+                                                placeholderCallbackForButtons,
+                                            onAccount: () =>
+                                                navigateToLogin(context),
+                                            onCart:
+                                                placeholderCallbackForButtons,
+                                            onMenu:
+                                                placeholderCallbackForButtons,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }
+                              },
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
-                    Container(
-                      // FIX: brand purple overlay
-                      color: const Color(0xAA4d2963),
-                    ),
-                    Center(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 700),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Placeholder Hero Title',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  height: 1.2,
-                                ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 400,
+                              width: double.infinity,
+                              child: Stack(
+                                children: [
+                                  Positioned.fill(
+                                    child: Image.network(
+                                      'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Positioned.fill(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                            Colors.black.withValues(alpha: .4),
+                                            Colors.black.withValues(alpha: .4),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned.fill(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 32,
+                                        vertical: 24,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 6,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 12,
+                                                    vertical: 6,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white
+                                                        .withValues(alpha: .12),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      50,
+                                                    ),
+                                                  ),
+                                                  child: const Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.trending_up,
+                                                        color: Colors.amber,
+                                                        size: 16,
+                                                      ),
+                                                      SizedBox(width: 6),
+                                                      Text(
+                                                        'New season, new drops',
+                                                        style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 20),
+                                                const Text(
+                                                  'Wear your campus pride.\nEvery day.',
+                                                  style: TextStyle(
+                                                    fontSize: 32,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                    height: 1.3,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 12),
+                                                const Text(
+                                                  'Premium university-branded clothing designed for comfort, style, and everyday uni life.',
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.white70,
+                                                    height: 1.5,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 24),
+                                                Row(
+                                                  children: [
+                                                    ElevatedButton(
+                                                      onPressed: () =>
+                                                          navigateToCollections(
+                                                              context),
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor:
+                                                            Colors.amber,
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                          horizontal: 24,
+                                                          vertical: 12,
+                                                        ),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8),
+                                                        ),
+                                                      ),
+                                                      child: const Text(
+                                                        'Shop collections',
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          if (!isMobile)
+                                            const SizedBox(width: 24),
+                                          if (!isMobile)
+                                            Expanded(
+                                              flex: 4,
+                                              child: Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: HeroPreviewCard(
+                                                  onShopNow: () =>
+                                                      navigateToCollections(
+                                                          context),
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: 16),
-                              const Text(
-                                'This is placeholder text for the hero section.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                  height: 1.5,
-                                ),
+                            ),
+                            Container(
+                              color: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 24,
                               ),
-                              const SizedBox(height: 32),
-                              BrowseProductsButton(
-                                onPressed: () => navigateToCollections(context),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Explore by category',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  const Text(
+                                    'Find something for lectures, the library, socials, or just chilling in halls.',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: [
+                                        _CategoryChip(
+                                          label: 'Hoodies',
+                                          icon: Icons.checkroom,
+                                          onTap: () =>
+                                              navigateToCollections(context),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        _CategoryChip(
+                                          label: 'T-shirts',
+                                          icon: Icons.emoji_people,
+                                          onTap: () =>
+                                              navigateToCollections(context),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        _CategoryChip(
+                                          label: 'Accessories',
+                                          icon: Icons.workspaces_outline,
+                                          onTap: () =>
+                                              navigateToCollections(context),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        _CategoryChip(
+                                          label: 'Limited drops',
+                                          icon: Icons.local_fire_department,
+                                          onTap: () =>
+                                              navigateToSaleCollections(
+                                                  context),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                            Container(
+                              color: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 32,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Featured products',
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  const Text(
+                                    'Browse a selection of our student favourites.',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 24),
+                                  LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      final isWide = constraints.maxWidth > 600;
+                                      final crossAxisCount = isWide ? 4 : 2;
+
+                                      const featuredProducts = allProducts;
+
+                                      return GridView.count(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        crossAxisCount: crossAxisCount,
+                                        mainAxisSpacing: 24,
+                                        crossAxisSpacing: 24,
+                                        childAspectRatio: 3 / 4,
+                                        children: [
+                                          for (final product
+                                              in featuredProducts)
+                                            ProductCard.fromProduct(product),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Footer(),
+                          ],
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
 
-              // PRODUCTS SECTION
-              Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(40.0),
-                  child: Column(
-                    children: [
-                      const Text(
-                        'PRODUCTS SECTION',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                      const SizedBox(height: 48),
-                      // FIX: use real products from the shared product catalogue
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          final isWide = constraints.maxWidth > 600;
-                          final crossAxisCount = isWide ? 4 : 2;
+// SMALL REUSABLE WIDGETS BELOW
 
-                          // Choose a subset of products to feature on the home page
-                          final featuredProducts = allProducts.take(4).toList();
+// ignore: unused_element
+class _HeroTag extends StatelessWidget {
+  final IconData icon;
+  final String label;
 
-                          return GridView.count(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            crossAxisCount: crossAxisCount,
-                            mainAxisSpacing: 24,
-                            crossAxisSpacing: 24,
-                            childAspectRatio: 3 / 4,
-                            children: [
-                              for (final product in featuredProducts)
-                                ProductCard.fromProduct(product),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+  const _HeroTag({
+    required this.icon,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          icon,
+          color: Colors.amber,
+          size: 16,
+        ),
+        const SizedBox(width: 4),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Colors.white70,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class HeroPreviewCard extends StatelessWidget {
+  final VoidCallback onShopNow;
+
+  const HeroPreviewCard({
+    super.key,
+    required this.onShopNow,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 260,
+      width: 220,
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: .08),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.white24),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(18),
+              child: Image.asset(
+                'assets/images/MorePictures/home_page_main.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'Union Shop Essentials',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'A curated set of comfy, campus-ready fits.',
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 11,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: onShopNow,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.amber,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
-
-              // SHARED FOOTER
-              const Footer(),
-            ],
+              child: const Text(
+                'Shop now',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CategoryChip extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _CategoryChip({
+    required this.label,
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: .03),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.black12),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: Colors.black87,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 13,
+                color: Colors.black87,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-// UPDATED: ProductCard now uses Product model and passes it into ProductPage
+// ignore: unused_element
+class _FeatureTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String description;
+
+  const _FeatureTile({
+    required this.icon,
+    required this.title,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 260,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.black12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: .03),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            icon,
+            color: Colors.amber[800],
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.black54,
+                    height: 1.4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class ProductCard extends StatelessWidget {
-  // FIX: now driven by Product model instead of loose title/price/image strings
   final Product product;
   final String title;
   final String price;
@@ -282,13 +772,12 @@ class ProductCard extends StatelessWidget {
 
   const ProductCard({
     super.key,
-    required this.product, // FIX: hold full product for navigation
+    required this.product,
     required this.title,
     required this.price,
     this.imageAssetPath,
   });
 
-  // FIX: convenience factory to create a card directly from a Product
   factory ProductCard.fromProduct(Product product) {
     return ProductCard(
       product: product,
@@ -302,7 +791,6 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // FIX: pass the selected product into the product page via route arguments
         Navigator.pushNamed(
           context,
           '/product',
@@ -315,7 +803,6 @@ class ProductCard extends StatelessWidget {
           Expanded(
             child: Builder(
               builder: (context) {
-                // FIX: if there is no image path, show placeholder text box
                 if (imageAssetPath == null || imageAssetPath!.isEmpty) {
                   return Container(
                     color: Colors.grey[300],
@@ -332,45 +819,31 @@ class ProductCard extends StatelessWidget {
                   );
                 }
 
-                // If an asset path exists, attempt to load it
-                return Image.asset(
-                  imageAssetPath!,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    // If the asset is missing or not yet configured, fall back to the same placeholder
-                    return Container(
-                      color: Colors.grey[300],
-                      child: const Center(
-                        child: Text(
-                          'No image attached',
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 12,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    );
-                  },
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(
+                    imageAssetPath!,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  ),
                 );
               },
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 4),
-              Text(
-                title,
-                style: const TextStyle(fontSize: 14, color: Colors.black),
-                maxLines: 2,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                price,
-                style: const TextStyle(fontSize: 13, color: Colors.grey),
-              ),
-            ],
+          const SizedBox(height: 8),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+            maxLines: 2,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            price,
+            style: const TextStyle(fontSize: 13, color: Colors.grey),
           ),
         ],
       ),
