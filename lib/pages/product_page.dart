@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:union_shop/widgets/buttons.dart'; // shared header buttons
 import 'package:union_shop/widgets/footer.dart';
-import 'package:union_shop/models/product.dart'; // FIX: shared Product model
+import 'package:union_shop/models/product.dart';
+import 'package:union_shop/widgets/app_header.dart'; // FIX: shared Product model
 
 class ProductPage extends StatefulWidget {
   // FIX: product is now passed in so this page can show real data
@@ -34,25 +34,6 @@ class _ProductPageState extends State<ProductPage> {
         _product.sizes.isNotEmpty ? _product.sizes.first : 'One Size';
     _selectedColour =
         _product.colours.isNotEmpty ? _product.colours.first : 'Default';
-  }
-
-  void _navigateToHome() {
-    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-  }
-
-  void _navigateToLogin() {
-    Navigator.pushNamed(context, '/login');
-  }
-
-  // Product-page-specific cart feedback
-  void _showCartMessage() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Cart is empty (demo only). Selected: $_quantity x $_selectedSize / $_selectedColour',
-        ),
-      ),
-    );
   }
 
   void _addToCart() {
@@ -103,119 +84,8 @@ class _ProductPageState extends State<ProductPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // HEADER
-              Container(
-                color: Colors.white,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Top banner
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      color: const Color(0xFF4d2963),
-                      child: const Text(
-                        'PLACEHOLDER HEADER TEXT',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 10,
-                      ),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          final isMobile = constraints.maxWidth < 600;
-
-                          if (isMobile) {
-                            return Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  flex: 45,
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: GestureDetector(
-                                      onTap: _navigateToHome,
-                                      child: Image.network(
-                                        'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
-                                        height: 32,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                const Icon(
-                                          Icons.store,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  flex: 55,
-                                  child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: HeaderButtons(
-                                      onSearch: () {},
-                                      onAccount: _navigateToLogin,
-                                      onCart: _showCartMessage,
-                                      onMenu: () {},
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          } else {
-                            return Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  flex: 20,
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: GestureDetector(
-                                      onTap: _navigateToHome,
-                                      child: Image.network(
-                                        'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
-                                        height: 40,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                const Icon(
-                                          Icons.store,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Expanded(
-                                  flex: 55,
-                                  child: SizedBox.shrink(),
-                                ),
-                                Expanded(
-                                  flex: 25,
-                                  child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: HeaderButtons(
-                                      onSearch: () {},
-                                      onAccount: _navigateToLogin,
-                                      onCart: _showCartMessage,
-                                      onMenu: () {},
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
+              // Shared Header
+              const AppHeader(),
               // PRODUCT DETAILS
               Container(
                 color: Colors.white,

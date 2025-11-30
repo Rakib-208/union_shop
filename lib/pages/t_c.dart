@@ -246,7 +246,7 @@ class TermsAndConditionsPage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            const HomeHeaderBanner(),
+                            const TopPromo(),
                             Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: isMobile ? 16 : 24,
