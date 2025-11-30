@@ -20,8 +20,7 @@ class CollectionsPage extends StatelessWidget {
         // FIX: Clothing collection now uses model-driven count
         title: 'Clothing (${clothingProducts.length} items)',
         description: 'T-shirts, shirts, pants, hoodies and jackets.',
-        routeName:
-            '/collection-example', // uses your existing CollectionPage route
+        routeName: '/collection', // uses your existing CollectionPage route
       ),
       _CollectionData(
         // FIX: Accessories collection now uses model-driven count
@@ -29,7 +28,7 @@ class CollectionsPage extends StatelessWidget {
         description: 'Caps and sunglasses.',
         routeName: null, // placeholder: no accessories page yet
       ),
-      _CollectionData(
+      const _CollectionData(
         // FIX: Sale route remains unchanged
         title: 'Sale & Clearance',
         description: 'Discounted end-of-line stock and seasonal promotions.',

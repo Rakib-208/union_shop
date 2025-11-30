@@ -35,14 +35,14 @@ class UnionShopApp extends StatelessWidget {
       routes: {
         // FIX: read Product argument and pass into ProductPage
         '/product': (context) {
-          final product =
-              ModalRoute.of(context)!.settings.arguments as Product;
-          return ProductPage(product: product); // FIX: pass selected product into page
+          final product = ModalRoute.of(context)!.settings.arguments as Product;
+          return ProductPage(
+              product: product); // FIX: pass selected product into page
         },
         '/login': (context) => const LoginPage(),
         '/about': (context) => const AboutUsPage(),
         '/collections': (context) => const CollectionsPage(),
-        '/collection-example': (context) => const CollectionPage(),
+        '/collection': (context) => const CollectionPage(),
         '/sale': (context) => const SaleCollectionPage(),
         SignupPage.routeName: (context) => const SignupPage(),
       },
