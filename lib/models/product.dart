@@ -26,7 +26,17 @@ class Product {
     this.salePrice,
   });
 
+  /// Returns the price the customer actually pays (sale price if present,
+  /// otherwise the regular price).
   double get discountPrice => salePrice ?? price;
+
+  /// Returns the percentage discount (e.g. 15.0 for 15% off), or null if
+  /// there is no active sale price.
+  double? get discountPercentage {
+    if (salePrice == null) return null;
+    final discount = (price - salePrice!) / price * 100;
+    return discount;
+  }
 }
 
 // NEW: Central product catalogue (12 demo products)
@@ -35,113 +45,112 @@ const List<Product> allProducts = [
   // 1–2: T-SHIRTS
   Product(
     id: 'tshirt_full_sleeve',
-    name: 'Full Sleeve Campus Tee',
-    price: 24.99,
+    name: 'Full-Sleeve Portsmouth Tee',
+    price: 18.00,
     type: ProductType.clothing,
     sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Navy', 'Black', 'Maroon'],
-    imageAsset:
-        'assets/images/tshirt_full_sleeve.png', // FIX: sample path, replace with your own
+    colours: ['Navy', 'Black'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
   Product(
-    id: 'tshirt_half_sleeve',
-    name: 'Half Sleeve Logo Tee',
-    price: 19.99,
+    id: 'tshirt_drop_shoulder',
+    name: 'Dropped-Shoulder Street Tee',
+    price: 16.00,
     type: ProductType.clothing,
     sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['White', 'Grey', 'Sky Blue'],
-    imageAsset: 'assets/images/tshirt_half_sleeve.png',
+    colours: ['White', 'Grey', 'Sand'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
 
-  // 3–4: HOODIES
+  // 3–4: SHIRTS
   Product(
-    id: 'hoodie_zipup',
-    name: 'Zip-Up Hoodie',
-    price: 34.99,
+    id: 'shirt_oxford',
+    name: 'Classic Oxford Uni Shirt',
+    price: 28.00,
     type: ProductType.clothing,
     sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Black', 'Charcoal'],
-    imageAsset: 'assets/images/hoodie_zipup.png',
+    colours: ['Light Blue', 'White'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
   Product(
-    id: 'hoodie_pullover',
-    name: 'Pullover Hoodie',
-    price: 32.50,
+    id: 'shirt_flannel',
+    name: 'Checked Flannel Overshirt',
+    price: 32.00,
     type: ProductType.clothing,
     sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Navy', 'Bottle Green'],
-    imageAsset: 'assets/images/hoodie_pullover.png',
+    colours: ['Red Check', 'Green Check'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
 
-  // 5–6: JACKETS
+  // 5–6: HOODIES
+  Product(
+    id: 'hoodie_classic',
+    name: 'Classic Uni Hoodie',
+    price: 35.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Navy', 'Grey'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
+  ),
+  Product(
+    id: 'hoodie_zip',
+    name: 'Zip-Up Society Hoodie',
+    price: 38.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Black', 'Bottle Green'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
+  ),
+
+  // 7–8: JOGGERS / TROUSERS
+  Product(
+    id: 'joggers_relaxed',
+    name: 'Relaxed Fit Joggers',
+    price: 26.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Charcoal', 'Light Grey'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
+  ),
+  Product(
+    id: 'trousers_chino',
+    name: 'Smart Chino Trousers',
+    price: 30.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Stone', 'Navy'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
+  ),
+
+  // 9–10: OUTERWEAR
   Product(
     id: 'jacket_windbreaker',
-    name: 'Light Windbreaker Jacket',
-    price: 39.99,
+    name: 'Lightweight Campus Windbreaker',
+    price: 42.00,
     type: ProductType.clothing,
     sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Red', 'Black'],
-    imageAsset: 'assets/images/jacket_windbreaker.png',
+    colours: ['Black', 'Royal Blue'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
   Product(
     id: 'jacket_puffer',
     name: 'Puffer Jacket',
-    price: 59.99,
+    price: 55.00,
     type: ProductType.clothing,
     sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Navy', 'Olive'],
-    imageAsset: 'assets/images/jacket_puffer.png',
+    colours: ['Navy', 'Maroon'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
 
-  // 7–8: TROUSERS / JOGGERS
+  // 11: CAP
   Product(
-    id: 'joggers_slimfit',
-    name: 'Slim Fit Joggers',
-    price: 27.50,
-    type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Black', 'Charcoal'],
-    imageAsset: 'assets/images/joggers_slimfit.png',
-  ),
-  Product(
-    id: 'trousers_chino',
-    name: 'Chino Trousers',
-    price: 35.00,
-    type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Khaki', 'Navy'],
-    imageAsset: 'assets/images/trousers_chino.png',
-  ),
-
-  // 9–10: CAPS / HATS
-  Product(
-    id: 'cap_baseball',
-    name: 'Baseball Cap',
-    price: 12.99,
+    id: 'cap_structured',
+    name: 'Structured Campus Cap',
+    price: 12.00,
     type: ProductType.accessories,
-    sizes: ['One Size'],
-    colours: ['Black', 'Navy', 'Burgundy'],
-    imageAsset: 'assets/images/cap_baseball.png',
-  ),
-  Product(
-    id: 'beanie_winter',
-    name: 'Winter Beanie',
-    price: 14.50,
-    type: ProductType.accessories,
-    sizes: ['One Size'],
-    colours: ['Grey', 'Black'],
-    imageAsset: 'assets/images/beanie_winter.png',
-  ),
-
-  // 11: TOTE BAG
-  Product(
-    id: 'bag_tote',
-    name: 'Canvas Tote Bag',
-    price: 9.99,
-    type: ProductType.accessories,
-    sizes: ['One Size'],
-    colours: ['Natural', 'Black Print'],
-    imageAsset: 'assets/images/bag_tote.png',
+    sizes: [],
+    colours: ['Navy', 'Beige'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
 
   // 12: SUNGLASSES
@@ -166,7 +175,6 @@ const List<Product> allProducts = [
     imageAsset: null,
     salePrice: 26.60, // 5% off
   ),
-
   Product(
     id: 'tshirt_graphic_core_sale',
     name: 'Core Graphic Tee (Sale)',
@@ -177,7 +185,6 @@ const List<Product> allProducts = [
     imageAsset: null,
     salePrice: 28.80, // 10% off
   ),
-
   Product(
     id: 'joggers_tapered_fit_sale',
     name: 'Tapered Joggers (Sale)',
@@ -188,7 +195,6 @@ const List<Product> allProducts = [
     imageAsset: null,
     salePrice: 38.25, // 15% off
   ),
-
   Product(
     id: 'jacket_puffer_light_sale',
     name: 'Light Puffer Jacket (Sale)',
@@ -199,7 +205,6 @@ const List<Product> allProducts = [
     imageAsset: null,
     salePrice: 44.00, // 20% off
   ),
-
   Product(
     id: 'polo_striped_campus_sale',
     name: 'Striped Campus Polo (Sale)',
@@ -208,9 +213,8 @@ const List<Product> allProducts = [
     sizes: ['S', 'M', 'L', 'XL'],
     colours: ['Navy / White Stripe'],
     imageAsset: null,
-    salePrice: 20.24, // 8% off
+    salePrice: 20.24, // ~8% off
   ),
-
   Product(
     id: 'shorts_chino_smart_sale',
     name: 'Smart Chino Shorts (Sale)',
@@ -219,6 +223,6 @@ const List<Product> allProducts = [
     sizes: ['S', 'M', 'L', 'XL'],
     colours: ['Stone', 'Navy'],
     imageAsset: null,
-    salePrice: 33.44, // 12% off
+    salePrice: 33.44, // ~12% off
   ),
 ];
