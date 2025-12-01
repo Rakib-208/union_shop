@@ -160,7 +160,7 @@ const List<Product> allProducts = [
     price: 18.00,
     type: ProductType.accessories,
     sizes: [],
-    colours: ['Black Frame / Black Lens', 'Silver Frame / Blue Lens'],
+    colours: ['Black', 'Grey'],
     imageAsset: null, // FIX: no image yet; set real asset path later
   ),
 

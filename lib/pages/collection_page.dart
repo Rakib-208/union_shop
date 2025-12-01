@@ -3,14 +3,18 @@ import 'package:union_shop/widgets/footer.dart';
 import 'package:union_shop/models/product.dart';
 import 'package:union_shop/widgets/product_card.dart' show ProductCard;
 
+/// A reusable collection page that can show:
+/// - only clothing
+/// - only accessories
+/// - or all products (when [typeFilter] is null)
 class CollectionPage extends StatefulWidget {
   final String title;
-  final ProductType? typeFilter; // can be null (means: show all types)
+  final ProductType? typeFilter; // null = show all product types
 
   const CollectionPage({
     super.key,
     required this.title,
-    this.typeFilter, // no longer "required"
+    this.typeFilter,
   });
 
   @override
@@ -22,29 +26,29 @@ class _CollectionPageState extends State<CollectionPage> {
   String _selectedSize = 'All';
   String _selectedColour = 'All';
 
-  double _effectivePrice(Product product) => product.discountPrice;
+  double _effectivePrice(Product p) => p.discountPrice;
 
+  /// Apply type, size, colour and sort filters.
   List<Product> _filteredAndSortedProducts() {
-    // 1) Start from all products
-    final List<Product> filtered = allProducts.where((product) {
-      // Only clothing items for this collection page
-      final bool matchesType = widget.typeFilter == null
-          ? true // if no filter, accept all product types
-          : product.type == widget.typeFilter;
+    // 1) Filter
+    List<Product> filtered = allProducts.where((product) {
+      // Type filter: if typeFilter is null, accept all types
+      final bool matchesType =
+          widget.typeFilter == null ? true : product.type == widget.typeFilter;
 
-      // Existing size filter
+      // Size filter
       final bool matchesSize =
-          _selectedSize == 'All' || product.sizes.contains(_selectedSize);
+          _selectedSize == 'All' ? true : product.sizes.contains(_selectedSize);
 
-      // Existing colour filter
-      final bool matchesColour =
-          _selectedColour == 'All' || product.colours.contains(_selectedColour);
+      // Colour filter
+      final bool matchesColour = _selectedColour == 'All'
+          ? true
+          : product.colours.contains(_selectedColour);
 
-      // Product must pass ALL checks
       return matchesType && matchesSize && matchesColour;
     }).toList();
 
-    // Sorting logic stays the same
+    // 2) Sort
     if (_selectedSort == 'Price: Low to High') {
       filtered.sort(
         (a, b) => _effectivePrice(a).compareTo(_effectivePrice(b)),
@@ -60,172 +64,175 @@ class _CollectionPageState extends State<CollectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Use current filters + sort to drive the collection view.
-    final List<Product> products = _filteredAndSortedProducts();
+    final products = _filteredAndSortedProducts();
+    final isMobile = MediaQuery.of(context).size.width < 600;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
         backgroundColor: const Color(0xFF4d2963),
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          // Responsive: match home-page-like behaviour
-          final bool isWide = constraints.maxWidth > 600;
-          final int crossAxisCount = isWide ? 4 : 2;
-
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                // Intro banner
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  color: Colors.grey[100],
-                  child: const Text(
-                    'Dummy collection page showing example filters and product cards. '
-                    'Dropdowns are present for coursework purposes and do not have '
-                    'to change the data.',
+      body: Column(
+        children: [
+          // Main scrollable content
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Browse ${widget.title.toLowerCase()}',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                   ),
-                ),
-
-                // Filters (responsive using inner LayoutBuilder)
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: LayoutBuilder(
-                    builder: (context, innerConstraints) {
-                      final bool isFilterWide = innerConstraints.maxWidth > 600;
-
-                      if (isFilterWide) {
-                        // Row layout for filters on wide screens
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: _buildDropdown(
-                                label: 'Sort by',
-                                value: _selectedSort,
-                                items: const [
-                                  'Featured',
-                                  'Price: Low to High',
-                                  'Price: High to Low',
-                                ],
-                                onChanged: (value) {
-                                  if (value == null) return;
-                                  setState(() => _selectedSort = value);
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: _buildDropdown(
-                                label: 'Size',
-                                value: _selectedSize,
-                                items: const ['All', 'S', 'M', 'L', 'XL'],
-                                onChanged: (value) {
-                                  if (value == null) return;
-                                  setState(() => _selectedSize = value);
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: _buildDropdown(
-                                label: 'Colour',
-                                value: _selectedColour,
-                                items: const [
-                                  'All',
-                                  'Navy',
-                                  'Black',
-                                  'Grey',
-                                  'Red',
-                                  'Green'
-                                ],
-                                onChanged: (value) {
-                                  if (value == null) return;
-                                  setState(() => _selectedColour = value);
-                                },
-                              ),
-                            ),
-                          ],
-                        );
-                      } else {
-                        // Column layout for filters on narrow screens
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            _buildDropdown(
-                              label: 'Sort by',
-                              value: _selectedSort,
-                              items: const [
-                                'Featured',
-                                'Price: Low to High',
-                                'Price: High to Low',
-                              ],
-                              onChanged: (value) {
-                                if (value == null) return;
-                                setState(() => _selectedSort = value);
-                              },
-                            ),
-                            const SizedBox(height: 12),
-                            _buildDropdown(
-                              label: 'Size',
-                              value: _selectedSize,
-                              items: const ['All', 'S', 'M', 'L', 'XL'],
-                              onChanged: (value) {
-                                if (value == null) return;
-                                setState(() => _selectedSize = value);
-                              },
-                            ),
-                            const SizedBox(height: 12),
-                            _buildDropdown(
-                              label: 'Colour',
-                              value: _selectedColour,
-                              items: const [
-                                'All',
-                                'Navy',
-                                'Black',
-                                'Grey',
-                                'Red',
-                                'Green'
-                              ],
-                              onChanged: (value) {
-                                if (value == null) return;
-                                setState(() => _selectedColour = value);
-                              },
-                            ),
-                          ],
-                        );
-                      }
-                    },
-                  ),
-                ),
-
-                // Product grid
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: crossAxisCount,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    childAspectRatio: 3 / 4,
-                    children: [
-                      for (final product in products)
-                        ProductCard.fromProduct(product),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                const Footer(),
-              ],
+                  const SizedBox(height: 16),
+                  _buildFilters(isMobile),
+                  const SizedBox(height: 16),
+                  if (products.isEmpty)
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 40),
+                        child: Text(
+                          'No products match your filters.',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    )
+                  else
+                    _buildGrid(products, isMobile),
+                ],
+              ),
             ),
-          );
-        },
+          ),
+
+          // Footer at the bottom
+          const Footer(),
+        ],
       ),
+    );
+  }
+
+  Widget _buildFilters(bool isMobile) {
+    final sortOptions = <String>[
+      'Featured',
+      'Price: Low to High',
+      'Price: High to Low',
+    ];
+
+    final sizeOptions = <String>[
+      'All',
+      'S',
+      'M',
+      'L',
+      'XL',
+    ];
+
+    final colourOptions = <String>[
+      'All',
+      'Navy',
+      'Black',
+      'Grey',
+      'Red',
+      'Green',
+    ];
+
+    if (isMobile) {
+      // Filters stacked vertically on small screens
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildDropdown(
+            label: 'Sort by',
+            value: _selectedSort,
+            items: sortOptions,
+            onChanged: (value) {
+              if (value == null) return;
+              setState(() => _selectedSort = value);
+            },
+          ),
+          const SizedBox(height: 12),
+          _buildDropdown(
+            label: 'Size',
+            value: _selectedSize,
+            items: sizeOptions,
+            onChanged: (value) {
+              if (value == null) return;
+              setState(() => _selectedSize = value);
+            },
+          ),
+          const SizedBox(height: 12),
+          _buildDropdown(
+            label: 'Colour',
+            value: _selectedColour,
+            items: colourOptions,
+            onChanged: (value) {
+              if (value == null) return;
+              setState(() => _selectedColour = value);
+            },
+          ),
+        ],
+      );
+    }
+
+    // Filters in a row on larger screens
+    return Row(
+      children: [
+        Expanded(
+          child: _buildDropdown(
+            label: 'Sort by',
+            value: _selectedSort,
+            items: sortOptions,
+            onChanged: (value) {
+              if (value == null) return;
+              setState(() => _selectedSort = value);
+            },
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: _buildDropdown(
+            label: 'Size',
+            value: _selectedSize,
+            items: sizeOptions,
+            onChanged: (value) {
+              if (value == null) return;
+              setState(() => _selectedSize = value);
+            },
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: _buildDropdown(
+            label: 'Colour',
+            value: _selectedColour,
+            items: colourOptions,
+            onChanged: (value) {
+              if (value == null) return;
+              setState(() => _selectedColour = value);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGrid(List<Product> products, bool isMobile) {
+    final crossAxisCount = isMobile ? 2 : 4;
+
+    return GridView.count(
+      crossAxisCount: crossAxisCount,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      mainAxisSpacing: 16,
+      crossAxisSpacing: 16,
+      childAspectRatio: 3 / 4,
+      children: products
+          .map(
+            (product) => ProductCard.fromProduct(product),
+          )
+          .toList(),
     );
   }
 
@@ -238,11 +245,21 @@ class _CollectionPageState extends State<CollectionPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(
+          label,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 12,
+          ),
+        ),
         const SizedBox(height: 4),
         DropdownButtonFormField<String>(
-          initialValue: value,
-          isExpanded: true,
+          value: value,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            isDense: true,
+            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          ),
           items: items
               .map(
                 (item) => DropdownMenuItem(

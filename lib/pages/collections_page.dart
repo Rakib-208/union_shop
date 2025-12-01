@@ -1,140 +1,123 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/widgets/footer.dart';
 import 'package:union_shop/models/product.dart';
-import 'package:union_shop/pages/collection_page.dart'; // FIX: import shared Product model
+import 'package:union_shop/pages/collection_page.dart';
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // FIX: collections now derived dynamically from Product types
+    // Pre-calculate counts for each group
     final clothingProducts =
         allProducts.where((p) => p.type == ProductType.clothing).toList();
 
     final accessoriesProducts =
         allProducts.where((p) => p.type == ProductType.accessories).toList();
 
-    final collections = [
-      const _CollectionData(
-        title: 'Clothing',
-        description:
-            'Course hoodies, trousers and more for Computer Science students.',
-        routeName: '/collection', // navigates to CollectionPage
-      ),
-      const _CollectionData(
-        title: 'Accessories',
-        description:
-            'Caps, bags, and small items for everyday student life and uni events.',
-        routeName: '/collection', // navigates to Collecton for accessories
-      ),
-      const _CollectionData(
-        title: 'On Sale',
-        description:
-            'Best offers from the catalogue using the shared product list.',
-        routeName: '/sale', // navigates to SaleCollectionPage
-      ),
-      _CollectionData(
-        title: 'All Products',
-        description:
-            'Combined clothing (${clothingProducts.length}) and accessories '
-            '(${accessoriesProducts.length}) from the shared catalogue.',
-        routeName:
-            '/collection', // navigates to CollectionPage showing all products
-      ),
-    ];
+    final int allCount = allProducts.length;
+
+    final int saleCount = allProducts.where((p) => p.salePrice != null).length;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Collections'),
         backgroundColor: const Color(0xFF4d2963),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
+      body: Column(
+        children: [
+          // Scrollable list of the 4 "buttons"
+          Expanded(
+            child: ListView(
               padding: const EdgeInsets.all(16),
-              color: Colors.grey[100],
-              child: const Text(
-                'Browse product collections. Clothing and accessories are now '
-                'grouped using the shared product catalogue.',
-              ),
-            ),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: collections.length,
-              separatorBuilder: (context, index) => const Divider(height: 0),
-              itemBuilder: (context, index) {
-                final data = collections[index];
-                return ListTile(
-                  title: Text(
-                    data.title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  subtitle: Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      data.description,
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                  ),
-                  trailing: data.routeName != null
-                      ? const Icon(Icons.chevron_right)
-                      : null,
+              children: [
+                _buildTile(
+                  context: context,
+                  title: 'Clothing',
+                  subtitle:
+                      'All clothing items (${clothingProducts.length} products)',
                   onTap: () {
-                    final title = data.title;
-
-                    if (title == 'Clothing') {
-                      Navigator.of(context).pushNamed('/collection');
-                    } else if (title == 'Accessories') {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const CollectionPage(
-                            title: 'Accessories collection',
-                            typeFilter: ProductType.accessories,
-                          ),
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const CollectionPage(
+                          title: 'Clothing collection',
+                          typeFilter: ProductType.clothing,
                         ),
-                      );
-                    } else if (title == 'All products') {
-                      // <-- adjust the string if needed
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const CollectionPage(
-                            title: 'All products',
-                            // typeFilter is omitted → becomes null → shows all types
-                          ),
-                        ),
-                      );
-                    } else if (data.routeName != null) {
-                      Navigator.of(context).pushNamed(data.routeName!);
-                    } else {
-                      // For other non-configured items, do nothing for now
-                    }
+                      ),
+                    );
                   },
-                );
-              },
+                ),
+                const Divider(),
+                _buildTile(
+                  context: context,
+                  title: 'Accessories',
+                  subtitle:
+                      'All accessories (${accessoriesProducts.length} products)',
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const CollectionPage(
+                          title: 'Accessories collection',
+                          typeFilter: ProductType.accessories,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const Divider(),
+                _buildTile(
+                  context: context,
+                  title: 'All products',
+                  subtitle: 'All items in the shop ($allCount total)',
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const CollectionPage(
+                          title: 'All products',
+                          // no typeFilter -> shows all types
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const Divider(),
+                _buildTile(
+                  context: context,
+                  title: 'On sale',
+                  subtitle: 'All items currently on sale ($saleCount products)',
+                  onTap: () {
+                    // Use your existing sale collection route
+                    Navigator.of(context).pushNamed('/sale');
+                  },
+                ),
+              ],
             ),
-            const Footer(),
-          ],
-        ),
+          ),
+
+          // Footer at the bottom
+          const Footer(),
+        ],
       ),
     );
   }
-}
 
-class _CollectionData {
-  final String title;
-  final String description;
-  final String? routeName;
-
-  const _CollectionData({
-    required this.title,
-    required this.description,
-    this.routeName,
-  });
+  Widget _buildTile({
+    required BuildContext context,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 18,
+        ),
+      ),
+      subtitle: Text(subtitle),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: onTap,
+    );
+  }
 }
