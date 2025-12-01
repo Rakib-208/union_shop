@@ -26,7 +26,7 @@ class CollectionsPage extends StatelessWidget {
         title: 'Accessories',
         description:
             'Caps, bags, and small items for everyday student life and uni events.',
-        routeName: null, // No dedicated page yet, purely informational
+        routeName: '/collection', // navigates to Collecton for accessories
       ),
       const _CollectionData(
         title: 'On Sale',
@@ -39,7 +39,8 @@ class CollectionsPage extends StatelessWidget {
         description:
             'Combined clothing (${clothingProducts.length}) and accessories '
             '(${accessoriesProducts.length}) from the shared catalogue.',
-        routeName: null,
+        routeName:
+            '/collection', // navigates to CollectionPage showing all products
       ),
     ];
 
@@ -86,14 +87,11 @@ class CollectionsPage extends StatelessWidget {
                       ? const Icon(Icons.chevron_right)
                       : null,
                   onTap: () {
-                    // We check what the tile is
                     final title = data.title;
 
                     if (title == 'Clothing') {
-                      // Use the existing behavior for clothing
                       Navigator.of(context).pushNamed('/collection');
                     } else if (title == 'Accessories') {
-                      // NEW BEHAVIOR: Go to the accessories collection page
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => const CollectionPage(
@@ -102,12 +100,20 @@ class CollectionsPage extends StatelessWidget {
                           ),
                         ),
                       );
+                    } else if (title == 'All products') {
+                      // <-- adjust the string if needed
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const CollectionPage(
+                            title: 'All products',
+                            // typeFilter is omitted → becomes null → shows all types
+                          ),
+                        ),
+                      );
                     } else if (data.routeName != null) {
-                      // Fall back to normal navigation for things like /sale
                       Navigator.of(context).pushNamed(data.routeName!);
                     } else {
-                      // For other items with no routeName (like "All products" for now),
-                      // we do nothing.
+                      // For other non-configured items, do nothing for now
                     }
                   },
                 );
