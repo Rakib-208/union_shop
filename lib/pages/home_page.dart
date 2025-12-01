@@ -334,7 +334,6 @@ class HomeScreen extends StatelessWidget {
 
 // SMALL REUSABLE WIDGETS BELOW
 
-
 class HeroPreviewCard extends StatelessWidget {
   final VoidCallback onShopNow;
 
@@ -352,61 +351,6 @@ class HeroPreviewCard extends StatelessWidget {
         color: Colors.white.withValues(alpha: .08),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: Colors.white24),
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(18),
-              child: Image.asset(
-                'assets/images/MorePictures/home_page_main.png',
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          const Text(
-            'Union Shop Essentials',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
-          const SizedBox(height: 4),
-          const Text(
-            'A curated set of comfy, campus-ready fits.',
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: 11,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: onShopNow,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                'Shop now',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
