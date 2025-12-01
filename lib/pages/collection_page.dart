@@ -4,7 +4,12 @@ import 'package:union_shop/models/product.dart';
 import 'package:union_shop/widgets/product_card.dart' show ProductCard;
 
 class CollectionPage extends StatefulWidget {
-  const CollectionPage({super.key});
+  final String title;
+
+  const CollectionPage({
+    super.key,
+    required this.title,
+  });
 
   @override
   State<CollectionPage> createState() => _CollectionPageState();
@@ -56,7 +61,7 @@ class _CollectionPageState extends State<CollectionPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Clothing collection'),
+        title: Text(widget.title),
         backgroundColor: const Color(0xFF4d2963),
       ),
       body: LayoutBuilder(
