@@ -48,9 +48,6 @@ class UnionShopApp extends StatelessWidget {
 
         // Example name: "/product/HOODIE-01"
         if (name.startsWith('/product/')) {
-          // Extract the ID part after "/product/"
-          final id = name.substring('/product/'.length);
-
           // We still get the full Product object via arguments
           final product = settings.arguments as Product?;
 
