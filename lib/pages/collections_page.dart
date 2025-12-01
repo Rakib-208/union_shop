@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/widgets/footer.dart';
-import 'package:union_shop/models/product.dart'; // FIX: import shared Product model
+import 'package:union_shop/models/product.dart';
+import 'package:union_shop/pages/collection_page.dart'; // FIX: import shared Product model
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
@@ -84,9 +85,31 @@ class CollectionsPage extends StatelessWidget {
                   trailing: data.routeName != null
                       ? const Icon(Icons.chevron_right)
                       : null,
-                  onTap: data.routeName != null
-                      ? () => Navigator.of(context).pushNamed(data.routeName!)
-                      : null,
+                  onTap: () {
+                    // We check what the tile is
+                    final title = data.title;
+
+                    if (title == 'Clothing') {
+                      // Use the existing behavior for clothing
+                      Navigator.of(context).pushNamed('/collection');
+                    } else if (title == 'Accessories') {
+                      // NEW BEHAVIOR: Go to the accessories collection page
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const CollectionPage(
+                            title: 'Accessories collection',
+                            typeFilter: ProductType.accessories,
+                          ),
+                        ),
+                      );
+                    } else if (data.routeName != null) {
+                      // Fall back to normal navigation for things like /sale
+                      Navigator.of(context).pushNamed(data.routeName!);
+                    } else {
+                      // For other items with no routeName (like "All products" for now),
+                      // we do nothing.
+                    }
+                  },
                 );
               },
             ),
