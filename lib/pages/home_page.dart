@@ -3,6 +3,7 @@ import 'package:union_shop/widgets/footer.dart';
 import 'package:union_shop/models/product.dart';
 import 'package:union_shop/widgets/promo.dart';
 import 'package:union_shop/widgets/app_header.dart';
+import 'package:union_shop/widgets/product_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -19,16 +20,8 @@ class HomeScreen extends StatelessWidget {
     Navigator.pushNamed(context, '/login');
   }
 
-  void navigateToSignup(BuildContext context) {
-    Navigator.pushNamed(context, '/signup');
-  }
-
   void navigateToCollections(BuildContext context) {
     Navigator.pushNamed(context, '/collections');
-  }
-
-  void navigateToSaleCollections(BuildContext context) {
-    Navigator.pushNamed(context, '/sale');
   }
 
   void navigateToAboutUs(BuildContext context) {
@@ -265,14 +258,6 @@ class HomeScreen extends StatelessWidget {
                                           onTap: () =>
                                               navigateToCollections(context),
                                         ),
-                                        const SizedBox(width: 12),
-                                        _CategoryChip(
-                                          label: 'Limited drops',
-                                          icon: Icons.local_fire_department,
-                                          onTap: () =>
-                                              navigateToSaleCollections(
-                                                  context),
-                                        ),
                                       ],
                                     ),
                                   ),
@@ -349,38 +334,6 @@ class HomeScreen extends StatelessWidget {
 
 // SMALL REUSABLE WIDGETS BELOW
 
-// ignore: unused_element
-class _HeroTag extends StatelessWidget {
-  final IconData icon;
-  final String label;
-
-  const _HeroTag({
-    required this.icon,
-    required this.label,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          color: Colors.amber,
-          size: 16,
-        ),
-        const SizedBox(width: 4),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 12,
-            color: Colors.white70,
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 class HeroPreviewCard extends StatelessWidget {
   final VoidCallback onShopNow;
@@ -499,160 +452,6 @@ class _CategoryChip extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-// ignore: unused_element
-class _FeatureTile extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String description;
-
-  const _FeatureTile({
-    required this.icon,
-    required this.title,
-    required this.description,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 260,
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.black12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: .03),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            icon,
-            color: Colors.amber[800],
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  description,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.black54,
-                    height: 1.4,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ProductCard extends StatelessWidget {
-  final Product product;
-  final String title;
-  final String price;
-  final String? imageAssetPath;
-
-  const ProductCard({
-    super.key,
-    required this.product,
-    required this.title,
-    required this.price,
-    this.imageAssetPath,
-  });
-
-  factory ProductCard.fromProduct(Product product) {
-    return ProductCard(
-      product: product,
-      title: product.name,
-      price: '£${product.price.toStringAsFixed(2)}',
-      imageAssetPath: product.imageAsset,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(
-          context,
-          '/product',
-          arguments: product,
-        );
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Builder(
-              builder: (context) {
-                if (imageAssetPath == null || imageAssetPath!.isEmpty) {
-                  return Container(
-                    color: Colors.grey[300],
-                    child: const Center(
-                      child: Text(
-                        'No image attached',
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 12,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  );
-                }
-
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(
-                    imageAssetPath!,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                  ),
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-            maxLines: 2,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            price,
-            style: const TextStyle(fontSize: 13, color: Colors.grey),
-          ),
-        ],
       ),
     );
   }
