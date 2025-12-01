@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/widgets/footer.dart';
 import 'package:union_shop/models/product.dart';
-import 'package:union_shop/pages/collection_page.dart';
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
@@ -39,14 +38,8 @@ class CollectionsPage extends StatelessWidget {
                     subtitle:
                         'All clothing items (${clothingProducts.length} products)',
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const CollectionPage(
-                            title: 'Clothing collection',
-                            typeFilter: ProductType.clothing,
-                          ),
-                        ),
-                      );
+                      Navigator.of(context)
+                          .pushNamed('/collections/collection/clothing');
                     },
                   ),
                   const Divider(),
@@ -56,14 +49,8 @@ class CollectionsPage extends StatelessWidget {
                     subtitle:
                         'All accessories (${accessoriesProducts.length} products)',
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const CollectionPage(
-                            title: 'Accessories collection',
-                            typeFilter: ProductType.accessories,
-                          ),
-                        ),
-                      );
+                      Navigator.of(context)
+                          .pushNamed('/collections/collection/accessories');
                     },
                   ),
                   const Divider(),
@@ -72,14 +59,8 @@ class CollectionsPage extends StatelessWidget {
                     title: 'All products',
                     subtitle: 'All items in the shop ($allCount total)',
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const CollectionPage(
-                            title: 'All products',
-                            // no typeFilter -> shows all types
-                          ),
-                        ),
-                      );
+                      Navigator.of(context)
+                          .pushNamed('/collections/collection/all');
                     },
                   ),
                   const Divider(),

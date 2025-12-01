@@ -46,23 +46,67 @@ class UnionShopApp extends StatelessWidget {
         SignupPage.routeName: (context) => const SignupPage(),
       },
       onGenerateRoute: (settings) {
-        // This lets us support URLs like /product/HOODIE-01
         final name = settings.name ?? '';
 
-        // Example name: "/product/HOODIE-01"
-        if (name.startsWith('/product/')) {
-          // We still get the full Product object via arguments
-          final product = settings.arguments as Product?;
+        // 1) Handle collection URLs like:
+        //    /collections/collection/clothing
+        //    /collections/collection/accessories
+        //    /collections/collection/all
+        if (name == '/collections/collection' ||
+            name == '/collections/collection/') {
+          // Incomplete URL -> treat as "All products"
+          return MaterialPageRoute(
+            builder: (context) => const CollectionPage(
+              title: 'All products',
+              // no typeFilter -> show all product types
+            ),
+            settings: settings,
+          );
+        }
 
-          if (product == null) {
-            // If for some reason no product was passed, send user home
+        if (name.startsWith('/collections/collection/')) {
+          // Extract the last part after "/collections/collection/"
+          final segment = name.substring('/collections/collection/'.length);
+
+          if (segment == 'clothing') {
             return MaterialPageRoute(
-              builder: (context) => const HomeScreen(),
+              builder: (context) => const CollectionPage(
+                title: 'Clothing collection',
+                typeFilter: ProductType.clothing,
+              ),
+              settings: settings,
+            );
+          } else if (segment == 'accessories') {
+            return MaterialPageRoute(
+              builder: (context) => const CollectionPage(
+                title: 'Accessories collection',
+                typeFilter: ProductType.accessories,
+              ),
+              settings: settings,
+            );
+          } else {
+            // Anything else (including "all" or random text)
+            // falls back to "All products"
+            return MaterialPageRoute(
+              builder: (context) => const CollectionPage(
+                title: 'All products',
+                // no typeFilter -> show all product types
+              ),
+              settings: settings,
             );
           }
+        }
 
-          // OPTIONAL: you *could* verify product.id == id here.
-          // For now we just trust the navigation call.
+        // 2) Existing dynamic product URLs like /product/<id>
+        if (name.startsWith('/product/')) {
+          final product = settings.arguments as Product?;
+          if (product == null) {
+            // If something goes wrong, go back home
+            return MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
+              settings: settings,
+            );
+          }
 
           return MaterialPageRoute(
             builder: (context) => ProductPage(product: product),
@@ -70,7 +114,8 @@ class UnionShopApp extends StatelessWidget {
           );
         }
 
-        // If it's not a /product/... URL, let Flutter use the normal routes map
+        // 3) If we don't handle it here, let Flutter
+        //    fall back to the normal 'routes:' map.
         return null;
       },
     );
