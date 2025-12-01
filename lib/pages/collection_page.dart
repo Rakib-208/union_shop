@@ -18,14 +18,24 @@ class _CollectionPageState extends State<CollectionPage> {
   double _effectivePrice(Product product) => product.discountPrice;
 
   List<Product> _filteredAndSortedProducts() {
+    // 1) Start from all products
     final List<Product> filtered = allProducts.where((product) {
+      // Only clothing items for this collection page
+      final bool matchesType = product.type == ProductType.clothing;
+
+      // Existing size filter
       final bool matchesSize =
           _selectedSize == 'All' || product.sizes.contains(_selectedSize);
+
+      // Existing colour filter
       final bool matchesColour =
           _selectedColour == 'All' || product.colours.contains(_selectedColour);
-      return matchesSize && matchesColour;
+
+      // Product must pass ALL checks
+      return matchesType && matchesSize && matchesColour;
     }).toList();
 
+    // Sorting logic stays the same
     if (_selectedSort == 'Price: Low to High') {
       filtered.sort(
         (a, b) => _effectivePrice(a).compareTo(_effectivePrice(b)),
@@ -46,7 +56,7 @@ class _CollectionPageState extends State<CollectionPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Course Hoodies Collection'),
+        title: const Text('Clothing collection'),
         backgroundColor: const Color(0xFF4d2963),
       ),
       body: LayoutBuilder(
