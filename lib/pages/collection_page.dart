@@ -64,20 +64,26 @@ class _CollectionPageState extends State<CollectionPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Get filtered products and screen size info
     final products = _filteredAndSortedProducts();
     final isMobile = MediaQuery.of(context).size.width < 600;
 
     return Scaffold(
       appBar: AppBar(
+        // If your CollectionPage has a 'title' field on the widget, this uses it
+        // e.g. "Clothing collection", "Accessories collection", "All products"
         title: Text(widget.title),
         backgroundColor: const Color(0xFF4d2963),
       ),
-      body: Column(
-        children: [
-          // Main scrollable content
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      // ✅ The WHOLE page (content + footer) scrolls together now
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Page content (title, filters, grid)
+            Padding(
+              padding:
+                  const EdgeInsets.fromLTRB(16, 16, 16, 120), // bottom space
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -88,8 +94,12 @@ class _CollectionPageState extends State<CollectionPage> {
                         ),
                   ),
                   const SizedBox(height: 16),
+
+                  // Filters row/column
                   _buildFilters(isMobile),
                   const SizedBox(height: 16),
+
+                  // Products grid or empty message
                   if (products.isEmpty)
                     const Center(
                       child: Padding(
@@ -105,11 +115,12 @@ class _CollectionPageState extends State<CollectionPage> {
                 ],
               ),
             ),
-          ),
 
-          // Footer at the bottom
-          const Footer(),
-        ],
+            // ✅ Footer is now at the VERY BOTTOM of the scroll,
+            // not stuck over the products.
+            const Footer(),
+          ],
+        ),
       ),
     );
   }
