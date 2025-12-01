@@ -24,79 +24,82 @@ class CollectionsPage extends StatelessWidget {
         title: const Text('Collections'),
         backgroundColor: const Color(0xFF4d2963),
       ),
-      body: Column(
-        children: [
-          // Scrollable list of the 4 "buttons"
-          Expanded(
-            child: ListView(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // All the tiles wrapped in padding
+            Padding(
               padding: const EdgeInsets.all(16),
-              children: [
-                _buildTile(
-                  context: context,
-                  title: 'Clothing',
-                  subtitle:
-                      'All clothing items (${clothingProducts.length} products)',
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const CollectionPage(
-                          title: 'Clothing collection',
-                          typeFilter: ProductType.clothing,
+              child: Column(
+                children: [
+                  _buildTile(
+                    context: context,
+                    title: 'Clothing',
+                    subtitle:
+                        'All clothing items (${clothingProducts.length} products)',
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const CollectionPage(
+                            title: 'Clothing collection',
+                            typeFilter: ProductType.clothing,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-                const Divider(),
-                _buildTile(
-                  context: context,
-                  title: 'Accessories',
-                  subtitle:
-                      'All accessories (${accessoriesProducts.length} products)',
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const CollectionPage(
-                          title: 'Accessories collection',
-                          typeFilter: ProductType.accessories,
+                      );
+                    },
+                  ),
+                  const Divider(),
+                  _buildTile(
+                    context: context,
+                    title: 'Accessories',
+                    subtitle:
+                        'All accessories (${accessoriesProducts.length} products)',
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const CollectionPage(
+                            title: 'Accessories collection',
+                            typeFilter: ProductType.accessories,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-                const Divider(),
-                _buildTile(
-                  context: context,
-                  title: 'All products',
-                  subtitle: 'All items in the shop ($allCount total)',
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const CollectionPage(
-                          title: 'All products',
-                          // no typeFilter -> shows all types
+                      );
+                    },
+                  ),
+                  const Divider(),
+                  _buildTile(
+                    context: context,
+                    title: 'All products',
+                    subtitle: 'All items in the shop ($allCount total)',
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const CollectionPage(
+                            title: 'All products',
+                            // no typeFilter -> shows all types
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-                const Divider(),
-                _buildTile(
-                  context: context,
-                  title: 'On sale',
-                  subtitle: 'All items currently on sale ($saleCount products)',
-                  onTap: () {
-                    // Use your existing sale collection route
-                    Navigator.of(context).pushNamed('/sale');
-                  },
-                ),
-              ],
+                      );
+                    },
+                  ),
+                  const Divider(),
+                  _buildTile(
+                    context: context,
+                    title: 'On sale',
+                    subtitle:
+                        'All items currently on sale ($saleCount products)',
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/sale');
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
 
-          // Footer at the bottom
-          const Footer(),
-        ],
+            // Footer now sits at the very bottom of the scroll
+            const Footer(),
+          ],
+        ),
       ),
     );
   }
