@@ -153,15 +153,60 @@ class _ProductPageState extends State<ProductPage> {
 
                     const SizedBox(height: 8),
 
-                    // Price (from selected product)
-                    Text(
-                      '£${_product.price.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        fontSize: 24,
-                        color: Color(0xFF4d2963),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    // Price of the selected product (shows sale price if available)
+                    _product.salePrice == null
+                        ? Text(
+                            '£${_product.price.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              fontSize: 24,
+                              color: Color(0xFF4d2963),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
+                        : Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              // SALE price in red
+                              Text(
+                                '£${_product.salePrice!.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  color: Colors.redAccent,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              // Original price with line-through
+                              Text(
+                                '£${_product.price.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              // Small discount badge like "-20%"
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.redAccent.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  '-${(((1 - (_product.salePrice! / _product.price)) * 100).round())}%',
+                                  style: const TextStyle(
+                                    color: Colors.redAccent,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
 
                     const SizedBox(height: 24),
 
