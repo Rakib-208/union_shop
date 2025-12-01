@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:union_shop/models/product.dart';        // adjust path if your model is elsewhere
+import 'package:union_shop/models/product.dart'; // adjust path if your model is elsewhere
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -21,7 +21,7 @@ class ProductCard extends StatelessWidget {
       onTap: () {
         Navigator.pushNamed(
           context,
-          '/product',
+          '/product/${product.id}',
           arguments: product,
         );
       },
@@ -97,8 +97,7 @@ class ProductCard extends StatelessWidget {
     }
 
     final effective = salePrice!;
-    final discountPercent =
-        ((1 - (effective / basePrice)) * 100).round();
+    final discountPercent = ((1 - (effective / basePrice)) * 100).round();
 
     return Row(
       children: [
@@ -119,8 +118,7 @@ class ProductCard extends StatelessWidget {
         ),
         const SizedBox(width: 6),
         Container(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
           decoration: BoxDecoration(
             color: Colors.redAccent.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
@@ -137,4 +135,3 @@ class ProductCard extends StatelessWidget {
     );
   }
 }
-

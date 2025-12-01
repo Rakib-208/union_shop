@@ -34,12 +34,6 @@ class UnionShopApp extends StatelessWidget {
 
       // Named routes used elsewhere in the app
       routes: {
-        // FIX: read Product argument and pass into ProductPage
-        '/product': (context) {
-          final product = ModalRoute.of(context)!.settings.arguments as Product;
-          return ProductPage(
-              product: product); // FIX: pass selected product into page
-        },
         '/login': (context) => const LoginPage(),
         '/about': (context) => const AboutUsPage(),
         '/collections': (context) => const CollectionsPage(),
@@ -47,6 +41,37 @@ class UnionShopApp extends StatelessWidget {
         '/sale': (context) => const SaleCollectionPage(),
         '/terms': (context) => const TermsAndConditionsPage(),
         SignupPage.routeName: (context) => const SignupPage(),
+      },
+      onGenerateRoute: (settings) {
+        // This lets us support URLs like /product/HOODIE-01
+        final name = settings.name ?? '';
+
+        // Example name: "/product/HOODIE-01"
+        if (name.startsWith('/product/')) {
+          // Extract the ID part after "/product/"
+          final id = name.substring('/product/'.length);
+
+          // We still get the full Product object via arguments
+          final product = settings.arguments as Product?;
+
+          if (product == null) {
+            // If for some reason no product was passed, send user home
+            return MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
+            );
+          }
+
+          // OPTIONAL: you *could* verify product.id == id here.
+          // For now we just trust the navigation call.
+
+          return MaterialPageRoute(
+            builder: (context) => ProductPage(product: product),
+            settings: settings,
+          );
+        }
+
+        // If it's not a /product/... URL, let Flutter use the normal routes map
+        return null;
       },
     );
   }
