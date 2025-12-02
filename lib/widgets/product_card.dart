@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:union_shop/models/product.dart'; // adjust path if your model is elsewhere
+import 'package:union_shop/models/product.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -9,6 +9,7 @@ class ProductCard extends StatelessWidget {
     required this.product,
   });
 
+  // Convenience factory if you ever use ProductCard.fromProduct(product)
   factory ProductCard.fromProduct(Product product) {
     return ProductCard(product: product);
   }
@@ -17,121 +18,149 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(
-          context,
-          '/product/${product.id}',
-          arguments: product,
-        );
-      },
-      child: Card(
-        elevation: 2,
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image
-            AspectRatio(
-              aspectRatio: 4 / 3,
-              child: _buildImage(),
-            ),
-            // Text + price
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.name,
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 6),
-                  _buildPriceRow(theme),
-                ],
+    final bool hasSale = product.salePrice != null;
+    final int? discountPercent = product.discountPercentage?.round();
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image + sale badge at the top
+          Stack(
+            children: [
+              AspectRatio(
+                aspectRatio: 4 / 3,
+                child: _buildProductImage(),
               ),
+              if (hasSale && discountPercent != null)
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: _buildSaleBadge(context, discountPercent),
+                ),
+            ],
+          ),
+
+          // Spacing between image and text
+          const SizedBox(height: 8),
+
+          // Name + pricing
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Product name
+                Text(
+                  product.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+
+                // Pricing row (sale price + original if on sale)
+                Row(
+                  children: [
+                    // Discounted or normal price
+                    Text(
+                      '£${product.discountPrice.toStringAsFixed(2)}',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (hasSale) ...[
+                      const SizedBox(width: 6),
+                      Text(
+                        '£${product.price.toStringAsFixed(2)}',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          decoration: TextDecoration.lineThrough,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+
+          const SizedBox(height: 8),
+        ],
       ),
     );
   }
 
-  Widget _buildImage() {
-    if (product.imageAsset == null) {
+  /// Builds the main product image for the card.
+  ///
+  /// Uses [product.defaultImage] so it follows the same logic as ProductPage:
+  /// - Prefer the first colour's image (id + colour index)
+  /// - Fall back to [imageAsset] if set
+  /// - If nothing is available or the file is missing, show a placeholder.
+  Widget _buildProductImage() {
+    final String? imagePath = product.defaultImage;
+
+    // If there is no usable image path, show a neutral placeholder.
+    if (imagePath == null || imagePath.isEmpty) {
       return Container(
-        alignment: Alignment.center,
-        child: const Text('No image attached'),
+        color: Colors.grey.shade200,
+        child: const Center(
+          child: Icon(
+            Icons.image_not_supported_outlined,
+            color: Colors.grey,
+            size: 32,
+          ),
+        ),
       );
     }
 
+    // Try to load the asset. If the file doesn't exist,
+    // fall back to the same placeholder.
     return Image.asset(
-      product.imageAsset!,
+      imagePath,
       fit: BoxFit.cover,
-      errorBuilder: (context, error, stack) {
-        return const Center(child: Text('No image attached'));
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          color: Colors.grey.shade200,
+          child: const Center(
+            child: Icon(
+              Icons.image_not_supported_outlined,
+              color: Colors.grey,
+              size: 32,
+            ),
+          ),
+        );
       },
     );
   }
 
-  Widget _buildPriceRow(ThemeData theme) {
-    final hasSale = product.salePrice != null;
-    final salePrice = product.salePrice;
-    final basePrice = product.price;
-
-    if (!hasSale) {
-      return Text(
-        '£${basePrice.toStringAsFixed(2)}',
-        style: theme.textTheme.bodyLarge?.copyWith(
-          fontWeight: FontWeight.bold,
-          color: const Color(0xFF4D2963),
+  /// Small red discount badge shown on the image when the product is on sale.
+  Widget _buildSaleBadge(BuildContext context, int discountPercent) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.redAccent.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Colors.redAccent,
+          width: 1,
         ),
-      );
-    }
-
-    final effective = salePrice!;
-    final discountPercent = ((1 - (effective / basePrice)) * 100).round();
-
-    return Row(
-      children: [
-        Text(
-          '£${effective.toStringAsFixed(2)}',
-          style: theme.textTheme.bodyLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Colors.redAccent,
-          ),
+      ),
+      child: Text(
+        '-$discountPercent%',
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: Colors.redAccent,
+          fontWeight: FontWeight.w600,
         ),
-        const SizedBox(width: 8),
-        Text(
-          '£${basePrice.toStringAsFixed(2)}',
-          style: theme.textTheme.bodySmall?.copyWith(
-            decoration: TextDecoration.lineThrough,
-            color: Colors.grey,
-          ),
-        ),
-        const SizedBox(width: 6),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          decoration: BoxDecoration(
-            color: Colors.redAccent.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Text(
-            '-$discountPercent%',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: Colors.redAccent,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

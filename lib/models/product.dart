@@ -1,18 +1,74 @@
-// NEW: Shared product model and in-memory catalogue for the Union Shop app.
+// High-level type: is this clothing or an accessory?
 enum ProductType {
   clothing,
   accessories,
 }
 
+// Who is this mainly for?
+enum ProductCategory {
+  mens,
+  womens,
+  unisex,
+}
+
+// What specific kind of item is it?
+enum ProductCat {
+  hoodie,
+  tshirt,
+  jacket,
+  shirt,
+  trousers,
+  joggers,
+  cap,
+  sunglasses,
+  bag,
+}
+
+// Central list of colour names used across the app.
+// The index (position) acts as the "colour code":
+// 0 -> 'Navy', 1 -> 'Black', 2 -> 'Grey', ...
+const List<String> kProductColours = <String>[
+  'Navy', // 0
+  'Black', // 1
+  'Grey', // 2
+  'Red', // 3
+  'Green', // 4
+  'White', // 5
+];
+
 class Product {
-  final String id;
+  // We use an integer ID now (0, 1, 2, ...).
+  // This is used in URLs and for building image file names.
+  final int id;
+
+  // Human-readable product name shown in the UI.
   final String name;
+
+  // Base price of the product (before any discount).
   final double price;
+
+  // High-level type (clothing vs accessories).
   final ProductType type;
+
+  // Who it is for (mens / womens / unisex).
+  final ProductCategory category;
+
+  // Specific type of item (tshirt, hoodie, bag, etc.).
+  final ProductCat cat;
+
+  // Available sizes (e.g. ['S', 'M', 'L', 'XL']).
   final List<String> sizes;
+
+  // Available colours as NAMES (e.g. ['Navy', 'Black']).
+  // We keep this as List<String> so your existing filters
+  // like product.colours.contains('Navy') still work.
   final List<String> colours;
-  final String?
-      imageAsset; // FIX: made nullable so products can exist without an image
+
+  // Optional manual image asset path, e.g. 'assets/images/manual.png'.
+  // This stays nullable so products can genuinely have "no image attached".
+  final String? imageAsset;
+
+  // Optional sale price. If present, it represents the discounted price.
   final double? salePrice;
 
   const Product({
@@ -20,209 +76,126 @@ class Product {
     required this.name,
     required this.price,
     required this.type,
+    required this.category,
+    required this.cat,
     required this.sizes,
     required this.colours,
-    this.imageAsset, // FIX: image is optional; show placeholder text when null
+    this.imageAsset,
     this.salePrice,
   });
 
-  /// Returns the price the customer actually pays (sale price if present,
-  /// otherwise the regular price).
+  /// The price that should be used when selling:
+  /// - salePrice if there is a sale
+  /// - otherwise the normal price
   double get discountPrice => salePrice ?? price;
 
-  /// Returns the percentage discount (e.g. 15.0 for 15% off), or null if
-  /// there is no active sale price.
+  /// Percentage discount, e.g. 20.0 means "20% off".
+  /// Returns null if there is no sale.
   double? get discountPercentage {
     if (salePrice == null) return null;
-    final discount = (price - salePrice!) / price * 100;
-    return discount;
+    if (price == 0) return null;
+    final discount = 1 - (salePrice! / price);
+    return discount * 100;
+  }
+
+  // Base folder for images. You said you keep them in assets/images at the root.
+  static const String _imageFolder = 'assets/images';
+
+  /// Find the index of a colour name in our central colour list.
+  /// For example: 'Navy' -> 0, 'Black' -> 1.
+  /// Returns null if the colour name is not in kProductColours.
+  int? _colourIndexFromName(String colourName) {
+    final index = kProductColours.indexOf(colourName);
+    if (index == -1) return null;
+    return index;
+  }
+
+  /// Build a single image path given a colour NAME and file extension.
+  ///
+  /// Example:
+  ///   id = 1, colourName = 'Navy' (index 0), extension = 'png'
+  ///   -> 'assets/images/1_0.png'
+  String? _buildImagePathFromColourName(String colourName, String extension) {
+    final colourIndex = _colourIndexFromName(colourName);
+    if (colourIndex == null) return null;
+    return '$_imageFolder/${id}_$colourIndex.$extension';
+  }
+
+  /// Return multiple possible image paths for a given colour name,
+  /// trying different file extensions (png, jpg, jpeg).
+  ///
+  /// This can be useful later if you want to probe which one exists.
+  List<String> candidateImagePathsForColourName(String colourName) {
+    final paths = <String>[];
+
+    final png = _buildImagePathFromColourName(colourName, 'png');
+    final jpg = _buildImagePathFromColourName(colourName, 'jpg');
+    final jpeg = _buildImagePathFromColourName(colourName, 'jpeg');
+
+    if (png != null) paths.add(png);
+    if (jpg != null) paths.add(jpg);
+    if (jpeg != null) paths.add(jpeg);
+
+    return paths;
+  }
+
+  /// Build a single primary image path for a given colour name.
+  /// By default it assumes a PNG file.
+  String? primaryImageForColourName(
+    String colourName, {
+    String extension = 'png',
+  }) {
+    return _buildImagePathFromColourName(colourName, extension);
+  }
+
+  /// Default image to use for this product:
+  /// - If there are colours, we try the FIRST colour's image
+  /// - If that fails, we fall back to [imageAsset]
+  ///
+  /// In the UI, we will still check for null before calling Image.asset,
+  /// so products with no real image will continue to show "No image attached".
+  String? get defaultImage {
+    if (colours.isNotEmpty) {
+      final candidate = primaryImageForColourName(colours.first);
+      if (candidate != null) {
+        return candidate;
+      }
+    }
+    return imageAsset;
   }
 }
 
-// NEW: Central product catalogue (12 demo products)
-// NOTE: Update imageAsset fields later when you have real files in assets/images/.
-const List<Product> allProducts = [
-  // 1–2: T-SHIRTS
+/// Temporary catalogue with only two products for testing.
+/// Later we can use AI / bulk generation to extend this.
+const List<Product> allProducts = <Product>[
   Product(
-    id: 'tshirt_full_sleeve',
+    id: 0,
     name: 'Full-Sleeve Portsmouth Tee',
     price: 18.00,
     type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Navy', 'Black'],
-    imageAsset: null, // FIX: no image yet; set real asset path later
+    category: ProductCategory.mens,
+    cat: ProductCat.tshirt,
+    sizes: <String>['S', 'M', 'L', 'XL'],
+    colours: <String>[
+      'Navy', // matches kProductColours[0]
+      'Black', // matches kProductColours[1]
+    ],
+    imageAsset: null, // no manual image assigned yet
   ),
   Product(
-    id: 'tshirt_drop_shoulder',
-    name: 'Dropped-Shoulder Street Tee',
-    price: 16.00,
+    id: 1,
+    name: 'Union Logo Hoodie',
+    price: 40.00,
     type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['White', 'Grey', 'Sand'],
-    imageAsset: null, // FIX: no image yet; set real asset path later
-  ),
-
-  // 3–4: SHIRTS
-  Product(
-    id: 'shirt_oxford',
-    name: 'Classic Oxford Uni Shirt',
-    price: 28.00,
-    type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Light Blue', 'White'],
-    imageAsset: null, // FIX: no image yet; set real asset path later
-  ),
-  Product(
-    id: 'shirt_flannel',
-    name: 'Checked Flannel Overshirt',
-    price: 32.00,
-    type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Red Check', 'Green Check'],
-    imageAsset: null, // FIX: no image yet; set real asset path later
-  ),
-
-  // 5–6: HOODIES
-  Product(
-    id: 'hoodie_classic',
-    name: 'Classic Uni Hoodie',
-    price: 35.00,
-    type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Navy', 'Grey'],
-    imageAsset: null, // FIX: no image yet; set real asset path later
-  ),
-  Product(
-    id: 'hoodie_zip',
-    name: 'Zip-Up Society Hoodie',
-    price: 38.00,
-    type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Black', 'Bottle Green'],
-    imageAsset: null, // FIX: no image yet; set real asset path later
-  ),
-
-  // 7–8: JOGGERS / TROUSERS
-  Product(
-    id: 'joggers_relaxed',
-    name: 'Relaxed Fit Joggers',
-    price: 26.00,
-    type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Charcoal', 'Light Grey'],
-    imageAsset: null, // FIX: no image yet; set real asset path later
-  ),
-  Product(
-    id: 'trousers_chino',
-    name: 'Smart Chino Trousers',
-    price: 30.00,
-    type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Stone', 'Navy'],
-    imageAsset: null, // FIX: no image yet; set real asset path later
-  ),
-
-  // 9–10: OUTERWEAR
-  Product(
-    id: 'jacket_windbreaker',
-    name: 'Lightweight Campus Windbreaker',
-    price: 42.00,
-    type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Black', 'Royal Blue'],
-    imageAsset: null, // FIX: no image yet; set real asset path later
-  ),
-  Product(
-    id: 'jacket_puffer',
-    name: 'Puffer Jacket',
-    price: 55.00,
-    type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Navy', 'Maroon'],
-    imageAsset: null, // FIX: no image yet; set real asset path later
-  ),
-
-  // 11: CAP
-  Product(
-    id: 'cap_structured',
-    name: 'Structured Campus Cap',
-    price: 12.00,
-    type: ProductType.accessories,
-    sizes: [],
-    colours: ['Navy', 'Beige'],
-    imageAsset: null, // FIX: no image yet; set real asset path later
-  ),
-
-  // 12: SUNGLASSES
-  Product(
-    id: 'sunglasses_uv_shield',
-    name: 'UV-Shield Polarised Sunglasses',
-    price: 18.00,
-    type: ProductType.accessories,
-    sizes: [],
-    colours: ['Black', 'Grey'],
-    imageAsset: null, // FIX: no image yet; set real asset path later
-  ),
-
-  // 13–18: SALE CLOTHING (5–20% off)
-  Product(
-    id: 'hoodie_logo_pullover_sale',
-    name: 'Logo Pullover Hoodie (Sale)',
-    price: 28.00,
-    type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Black', 'Ash Grey'],
+    category: ProductCategory.unisex,
+    cat: ProductCat.hoodie,
+    sizes: <String>['S', 'M', 'L', 'XL'],
+    colours: <String>[
+      'Navy', // 0
+      'Green', // 4
+      'Black', // 1
+    ],
     imageAsset: null,
-    salePrice: 26.60, // 5% off
-  ),
-  Product(
-    id: 'tshirt_graphic_core_sale',
-    name: 'Core Graphic Tee (Sale)',
-    price: 32.00,
-    type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['White', 'Navy'],
-    imageAsset: null,
-    salePrice: 28.80, // 10% off
-  ),
-  Product(
-    id: 'joggers_tapered_fit_sale',
-    name: 'Tapered Joggers (Sale)',
-    price: 45.00,
-    type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Charcoal', 'Olive'],
-    imageAsset: null,
-    salePrice: 38.25, // 15% off
-  ),
-  Product(
-    id: 'jacket_puffer_light_sale',
-    name: 'Light Puffer Jacket (Sale)',
-    price: 55.00,
-    type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Forest Green', 'Black'],
-    imageAsset: null,
-    salePrice: 44.00, // 20% off
-  ),
-  Product(
-    id: 'polo_striped_campus_sale',
-    name: 'Striped Campus Polo (Sale)',
-    price: 22.00,
-    type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Navy / White Stripe'],
-    imageAsset: null,
-    salePrice: 20.24, // ~8% off
-  ),
-  Product(
-    id: 'shorts_chino_smart_sale',
-    name: 'Smart Chino Shorts (Sale)',
-    price: 38.00,
-    type: ProductType.clothing,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colours: ['Stone', 'Navy'],
-    imageAsset: null,
-    salePrice: 33.44, // ~12% off
+    salePrice: 32.00, // on sale!
   ),
 ];

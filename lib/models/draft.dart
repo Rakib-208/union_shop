@@ -1,56 +1,17 @@
-// Product model and catalogue
-
 enum ProductType {
   clothing,
   accessories,
 }
 
-enum ProductCategory {
-  mens,
-  womens,
-  unisex,
-}
-
-enum ProductCat {
-  hoodie,
-  tshirt,
-  jacket,
-  shirt,
-  trousers,
-  joggers,
-  cap,
-  sunglasses,
-  bag,
-}
-
-// Centralised allowed colour palette.
-// Colours accessed by index.
-const List<String> kProductColours = [
-  'Red', // 0
-  'Blue', // 1
-  'Black', // 2
-  'White', // 3
-  'Green', // 4
-  'Orange', // 5
-  'Brown', // 6
-  'Gray', // 7
-];
-
 class Product {
-  final int id;
+  final String id;
   final String name;
   final double price;
   final ProductType type;
-  final ProductCategory category;
-  final ProductCat cat;
   final List<String> sizes;
-
-  /// Numeric list mapping to kProductColours.
-  final List<int> colours;
-
-  /// Optional manual/legacy image asset path.
-  final String? imageAsset;
-
+  final List<String> colours;
+  final String?
+      imageAsset; // FIX: made nullable so products can exist without an image
   final double? salePrice;
 
   const Product({
@@ -58,108 +19,209 @@ class Product {
     required this.name,
     required this.price,
     required this.type,
-    required this.category,
-    required this.cat,
     required this.sizes,
     required this.colours,
-    this.imageAsset,
+    this.imageAsset, // FIX: image is optional; show placeholder text when null
     this.salePrice,
   });
 
-  // ---------------- EXISTING GETTERS (unchanged) ----------------
-
-  List<String> get colourNames =>
-      colours.map((i) => kProductColours[i]).toList();
-
-  /// Returns the active price: sale price if present, otherwise base price.
+  /// Returns the price the customer actually pays (sale price if present,
+  /// otherwise the regular price).
   double get discountPrice => salePrice ?? price;
 
-  /// Returns the discount percentage if a sale price exists, otherwise null.
+  /// Returns the percentage discount (e.g. 15.0 for 15% off), or null if
+  /// there is no active sale price.
   double? get discountPercentage {
     if (salePrice == null) return null;
     final discount = (price - salePrice!) / price * 100;
     return discount;
   }
-
-  // ---------------- NEW IMAGE HELPERS (non-breaking) ----------------
-
-  /// Base folder where product images are stored.
-  /// Files are expected to live under: lib/assets/images
-  static const String _imageFolder = 'lib/assets/images';
-
-  /// Internal helper to build a single image path for a given colour code
-  /// and extension.
-  String _buildImagePath(int colourCode, String extension) {
-    return '$_imageFolder/${id}_$colourCode.$extension';
-  }
-
-  /// Returns a list of candidate asset paths for the given colour code,
-  /// trying .png, .jpg, .jpeg in that order.
-  ///
-  /// Example for product id 1 and colourCode 2:
-  /// - lib/assets/images/1_2.png
-  /// - lib/assets/images/1_2.jpg
-  /// - lib/assets/images/1_2.jpeg
-  List<String> imageAssetsForColour(int colourCode) {
-    return [
-      _buildImagePath(colourCode, 'png'),
-      _buildImagePath(colourCode, 'jpg'),
-      _buildImagePath(colourCode, 'jpeg'),
-    ];
-  }
-
-  /// Convenience getter for a “primary” image for a specific colour.
-  /// By default assumes .png.
-  ///
-  /// On your product page, when a user selects a colour (using its colour code
-  /// from kProductColours / colours list), you can call:
-  ///   product.primaryImageForColour(selectedColourCode)
-  /// and use that string in Image.asset().
-  String primaryImageForColour(int colourCode, {String extension = 'png'}) {
-    return _buildImagePath(colourCode, extension);
-  }
-
-  /// Default image for this product:
-  /// - If there is at least one colour, use the first colour's primary image.
-  /// - Otherwise fall back to the legacy imageAsset field.
-  String? get defaultImage {
-    if (colours.isNotEmpty) {
-      return primaryImageForColour(colours.first);
-    }
-    return imageAsset;
-  }
 }
 
-// Product catalogue
+// NEW: Central product catalogue (12 demo products)
+// NOTE: Update imageAsset fields later when you have real files in assets/images/.
 const List<Product> allProducts = [
+  // 1–2: T-SHIRTS
   Product(
-    id: 0,
+    id: 'tshirt_full_sleeve',
     name: 'Full-Sleeve Portsmouth Tee',
     price: 18.00,
     type: ProductType.clothing,
-    category: ProductCategory.mens,
-    cat: ProductCat.tshirt,
     sizes: ['S', 'M', 'L', 'XL'],
-    colours: [
-      1, // Blue
-      2, // Black
-    ],
-    imageAsset: null,
+    colours: ['Navy', 'Black'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
   ),
   Product(
-    id: 1,
-    name: 'Union Logo Hoodie',
-    price: 40.00,
+    id: 'tshirt_drop_shoulder',
+    name: 'Dropped-Shoulder Street Tee',
+    price: 16.00,
     type: ProductType.clothing,
-    category: ProductCategory.unisex,
-    cat: ProductCat.hoodie,
     sizes: ['S', 'M', 'L', 'XL'],
-    colours: [
-      1, // Blue
-      4, // Green
-      2, // Black
-    ],
+    colours: ['White', 'Grey', 'Sand'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
+  ),
+
+  // 3–4: SHIRTS
+  Product(
+    id: 'shirt_oxford',
+    name: 'Classic Oxford Uni Shirt',
+    price: 28.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Light Blue', 'White'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
+  ),
+  Product(
+    id: 'shirt_flannel',
+    name: 'Checked Flannel Overshirt',
+    price: 32.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Red Check', 'Green Check'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
+  ),
+
+  // 5–6: HOODIES
+  Product(
+    id: 'hoodie_classic',
+    name: 'Classic Uni Hoodie',
+    price: 35.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Navy', 'Grey'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
+  ),
+  Product(
+    id: 'hoodie_zip',
+    name: 'Zip-Up Society Hoodie',
+    price: 38.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Black', 'Bottle Green'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
+  ),
+
+  // 7–8: JOGGERS / TROUSERS
+  Product(
+    id: 'joggers_relaxed',
+    name: 'Relaxed Fit Joggers',
+    price: 26.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Charcoal', 'Light Grey'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
+  ),
+  Product(
+    id: 'trousers_chino',
+    name: 'Smart Chino Trousers',
+    price: 30.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Stone', 'Navy'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
+  ),
+
+  // 9–10: OUTERWEAR
+  Product(
+    id: 'jacket_windbreaker',
+    name: 'Lightweight Campus Windbreaker',
+    price: 42.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Black', 'Royal Blue'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
+  ),
+  Product(
+    id: 'jacket_puffer',
+    name: 'Puffer Jacket',
+    price: 55.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Navy', 'Maroon'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
+  ),
+
+  // 11: CAP
+  Product(
+    id: 'cap_structured',
+    name: 'Structured Campus Cap',
+    price: 12.00,
+    type: ProductType.accessories,
+    sizes: [],
+    colours: ['Navy', 'Beige'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
+  ),
+
+  // 12: SUNGLASSES
+  Product(
+    id: 'sunglasses_uv_shield',
+    name: 'UV-Shield Polarised Sunglasses',
+    price: 18.00,
+    type: ProductType.accessories,
+    sizes: [],
+    colours: ['Black', 'Grey'],
+    imageAsset: null, // FIX: no image yet; set real asset path later
+  ),
+
+  // 13–18: SALE CLOTHING (5–20% off)
+  Product(
+    id: 'hoodie_logo_pullover_sale',
+    name: 'Logo Pullover Hoodie (Sale)',
+    price: 28.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Black', 'Ash Grey'],
     imageAsset: null,
-    salePrice: 32.00,
+    salePrice: 26.60, // 5% off
+  ),
+  Product(
+    id: 'tshirt_graphic_core_sale',
+    name: 'Core Graphic Tee (Sale)',
+    price: 32.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['White', 'Navy'],
+    imageAsset: null,
+    salePrice: 28.80, // 10% off
+  ),
+  Product(
+    id: 'joggers_tapered_fit_sale',
+    name: 'Tapered Joggers (Sale)',
+    price: 45.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Charcoal', 'Olive'],
+    imageAsset: null,
+    salePrice: 38.25, // 15% off
+  ),
+  Product(
+    id: 'jacket_puffer_light_sale',
+    name: 'Light Puffer Jacket (Sale)',
+    price: 55.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Forest Green', 'Black'],
+    imageAsset: null,
+    salePrice: 44.00, // 20% off
+  ),
+  Product(
+    id: 'polo_striped_campus_sale',
+    name: 'Striped Campus Polo (Sale)',
+    price: 22.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Navy / White Stripe'],
+    imageAsset: null,
+    salePrice: 20.24, // ~8% off
+  ),
+  Product(
+    id: 'shorts_chino_smart_sale',
+    name: 'Smart Chino Shorts (Sale)',
+    price: 38.00,
+    type: ProductType.clothing,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colours: ['Stone', 'Navy'],
+    imageAsset: null,
+    salePrice: 33.44, // ~12% off
   ),
 ];

@@ -105,9 +105,27 @@ class _ProductPageState extends State<ProductPage> {
                         borderRadius: BorderRadius.circular(8),
                         child: Builder(
                           builder: (context) {
-                            // FIX: use product image when available, otherwise show placeholder text
-                            if (_product.imageAsset == null ||
-                                _product.imageAsset!.isEmpty) {
+                            // Decide which image path to use based on the selected colour.
+                            String? imagePath;
+
+                            // _selectedColour is a non-null String (late), so we can
+                            // safely check if it's not just the default placeholder.
+                            if (_selectedColour.isNotEmpty &&
+                                _selectedColour != 'Default') {
+                              // Try to get an image for the currently selected colour.
+                              imagePath = _product
+                                  .primaryImageForColourName(_selectedColour);
+
+                              // If that fails (e.g. colour not in kProductColours),
+                              // fall back to the model's default image.
+                              imagePath ??= _product.defaultImage;
+                            } else {
+                              // If no meaningful colour is selected, just use the default image.
+                              imagePath = _product.defaultImage;
+                            }
+
+                            // If there is still no usable path, show the "No image attached" message.
+                            if (imagePath == null || imagePath.isEmpty) {
                               return const Center(
                                 child: Text(
                                   'No image attached',
@@ -119,8 +137,11 @@ class _ProductPageState extends State<ProductPage> {
                                 ),
                               );
                             }
+
+                            // Try to load the image. If the asset is missing,
+                            // show the "No image attached" message instead of crashing.
                             return Image.asset(
-                              _product.imageAsset!,
+                              imagePath,
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) {
                                 return const Center(
