@@ -3,6 +3,7 @@ import 'package:union_shop/widgets/footer.dart';
 import 'package:union_shop/models/product.dart';
 import 'package:union_shop/widgets/app_header.dart'; // FIX: shared Product model
 import 'package:union_shop/models/cart.dart';
+import 'package:union_shop/models/order.dart';
 
 class ProductPage extends StatefulWidget {
   // FIX: product is now passed in so this page can show real data
@@ -65,10 +66,32 @@ class _ProductPageState extends State<ProductPage> {
     final selectedSize = _selectedSize;
     final selectedColour = _selectedColour;
 
-    // Use sale price if available, otherwise normal price.
+    // 1) Work out the price
     final double unitPrice = widget.product.discountPrice;
     final double total = unitPrice * _quantity;
 
+    // 2) Build an OrderItem for this single purchase
+    final orderItem = OrderItem(
+      productName: widget.product.name,
+      size: selectedSize,
+      colour: selectedColour,
+      quantity: _quantity,
+      unitPrice: unitPrice,
+      lineTotal: total,
+    );
+
+    // 3) Build an Order that wraps that one item
+    final order = Order(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      dateTime: DateTime.now(),
+      items: [orderItem],
+      totalPrice: total,
+    );
+
+    // 4) Save this order into the global order history
+    orderHistoryModel.addOrder(order);
+
+    // 5) Show the confirmation popup to the user
     showDialog(
       context: context,
       builder: (context) {
