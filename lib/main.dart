@@ -11,8 +11,16 @@ import 'package:union_shop/models/product.dart';
 import 'package:union_shop/pages/t_c.dart'; // FIX: for typed product route
 import 'package:union_shop/pages/cart_page.dart';
 import 'package:union_shop/pages/order_history_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const UnionShopApp());
 }
 
