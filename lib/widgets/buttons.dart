@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/models/cart.dart';
+import 'package:union_shop/pages/search_results_page.dart';
 
 class HeaderButtons extends StatefulWidget {
   final VoidCallback onSearch;
@@ -20,27 +21,68 @@ class HeaderButtons extends StatefulWidget {
 }
 
 class _HeaderButtonsState extends State<HeaderButtons> {
+  final TextEditingController _searchController = TextEditingController();
   void _showSearchOverlay() {
     showDialog<void>(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Search'),
-          content: const TextField(
-            decoration: InputDecoration(
-              hintText: 'Search products…',
+          title: const Text('Search products'),
+          content: TextField(
+            controller: _searchController,
+            decoration: const InputDecoration(
+              hintText: 'Try "mens hoodie" or "tshirt"...',
               border: OutlineInputBorder(),
             ),
+            textInputAction: TextInputAction.search,
+            onSubmitted: (value) {
+              _runSearch(dialogContext);
+            },
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Close'),
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                _runSearch(dialogContext);
+              },
+              child: const Text('Search'),
             ),
           ],
         );
       },
     );
+  }
+
+  void _runSearch(BuildContext dialogContext) {
+    final query = _searchController.text.trim();
+
+    if (query.isEmpty) {
+      // Nothing typed → just close the popup.
+      Navigator.of(dialogContext).pop();
+      return;
+    }
+
+    // Close the dialog first.
+    Navigator.of(dialogContext).pop();
+
+    // Navigate to the SearchResultsPage, passing the query.
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => SearchResultsPage(query: query),
+      ),
+    );
+
+    // Call the callback in case header wants to react to search.
+    widget.onSearch();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
