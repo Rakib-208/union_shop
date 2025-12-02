@@ -75,6 +75,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login'),
+      ),
       backgroundColor: Colors.white,
       body: Center(
         child: ConstrainedBox(
