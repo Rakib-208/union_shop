@@ -145,6 +145,8 @@ class _HeaderButtonsState extends State<HeaderButtons> {
               Navigator.of(context).pushNamed('/login');
             } else if (value == 4) {
               Navigator.of(context).pushNamed('/about');
+            } else if (value == 5) {
+              Navigator.of(context).pushNamed('/orders');
             }
             widget.onMenu();
           },
@@ -196,6 +198,16 @@ class _HeaderButtonsState extends State<HeaderButtons> {
                   Icon(Icons.info_outline, size: 10),
                   SizedBox(width: 5),
                   Text('About Us'),
+                ],
+              ),
+            ),
+            PopupMenuItem<int>(
+              value: 5,
+              child: Row(
+                children: [
+                  Icon(Icons.history, size: 10),
+                  SizedBox(width: 5),
+                  Text('Orders'),
                 ],
               ),
             ),

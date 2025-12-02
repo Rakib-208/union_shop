@@ -10,6 +10,7 @@ import 'package:union_shop/pages/sale_collection_page.dart';
 import 'package:union_shop/models/product.dart';
 import 'package:union_shop/pages/t_c.dart'; // FIX: for typed product route
 import 'package:union_shop/pages/cart_page.dart';
+import 'package:union_shop/pages/order_history_page.dart';
 
 void main() {
   runApp(const UnionShopApp());
@@ -44,6 +45,7 @@ class UnionShopApp extends StatelessWidget {
             ),
         '/sale': (context) => const SaleCollectionPage(),
         '/cart': (context) => const CartPage(),
+        '/orders': (context) => const OrderHistoryPage(),
         '/terms': (context) => const TermsAndConditionsPage(),
         SignupPage.routeName: (context) => const SignupPage(),
       },
