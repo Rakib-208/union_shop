@@ -32,16 +32,64 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Future<void> _onSignup() async {
+    // 1) Run form validation first
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
 
-    // TODO: replace this with real signup logic (API / Firebase / etc.)
-    await Future.delayed(const Duration(seconds: 1));
+    try {
+      final fullName = _fullNameCtrl.text.trim();
+      final email = _emailCtrl.text.trim();
+      final password = _passwordCtrl.text.trim();
 
-    if (mounted) {
+      // 2) Create the user in Firebase Auth
+      final credential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      // 3) Optionally set the display name on the user
+      await credential.user?.updateDisplayName(fullName);
+
+      if (!mounted) return;
+
       setState(() => _isLoading = false);
-      Navigator.of(context).pop(); // go back to login after signup
+
+      // 4) Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Account created for $email'),
+        ),
+      );
+
+      // 5) Go back to Login page
+      Navigator.of(context).pop();
+    } on FirebaseAuthException catch (e) {
+      // Handle common Firebase auth errors
+      String message = 'Signup failed. Please try again.';
+
+      if (e.code == 'email-already-in-use') {
+        message = 'An account already exists for that email.';
+      } else if (e.code == 'invalid-email') {
+        message = 'That email address is not valid.';
+      } else if (e.code == 'weak-password') {
+        message = 'Please choose a stronger password.';
+      }
+
+      if (mounted) {
+        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      }
+    } catch (e) {
+      // Any other unexpected error
+      if (mounted) {
+        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unexpected error. Please try again.'),
+          ),
+        );
+      }
     }
   }
 
