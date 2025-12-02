@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:union_shop/widgets/footer.dart';
 import 'package:union_shop/models/product.dart';
 import 'package:union_shop/widgets/app_header.dart'; // FIX: shared Product model
+import 'package:union_shop/models/cart.dart';
 
 class ProductPage extends StatefulWidget {
   // FIX: product is now passed in so this page can show real data
@@ -37,20 +38,54 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   void _addToCart() {
+    // Make sure we have size and colour (they should be set already).
+    final selectedSize = _selectedSize;
+    final selectedColour = _selectedColour;
+
+    // Add to the global cart.
+    cartModel.addItem(
+      widget.product,
+      selectedSize,
+      selectedColour,
+      _quantity,
+    );
+
+    // Show a small message at the bottom of the screen.
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Added $_quantity x $_selectedSize / $_selectedColour to cart (demo only).',
+          'Added $_quantity × $selectedSize / $selectedColour ${widget.product.name} to your cart.',
         ),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
 
   void _buyNow() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Checkout flow is not implemented (demo only).'),
-      ),
+    final selectedSize = _selectedSize;
+    final selectedColour = _selectedColour;
+
+    // Use sale price if available, otherwise normal price.
+    final double unitPrice = widget.product.discountPrice;
+    final double total = unitPrice * _quantity;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Purchase complete'),
+          content: Text(
+            '$_quantity × $selectedSize / $selectedColour ${widget.product.name} '
+            'purchased for £${total.toStringAsFixed(2)}.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 
