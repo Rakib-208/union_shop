@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/models/cart.dart';
+import 'package:union_shop/models/order.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -218,6 +219,9 @@ class _CartSummary extends StatelessWidget {
       return;
     }
 
+    final total = cartModel.totalPrice;
+
+    // 1) Build a text summary for the popup
     final buffer = StringBuffer();
     for (final item in cartModel.items) {
       buffer.writeln(
@@ -226,7 +230,7 @@ class _CartSummary extends StatelessWidget {
       );
     }
     buffer.writeln('---------------------');
-    buffer.writeln('Total: £${cartModel.totalPrice.toStringAsFixed(2)}');
+    buffer.writeln('Total: £${total.toStringAsFixed(2)}');
 
     showDialog(
       context: context,
@@ -243,10 +247,28 @@ class _CartSummary extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                // For now, just clear the cart after "buying".
+                // 2) Create an Order from the current cart items
+                final orderItems = cartModel.items
+                    .map((cartItem) => OrderItem.fromCartItem(cartItem))
+                    .toList();
+
+                final order = Order(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                  dateTime: DateTime.now(),
+                  items: orderItems,
+                  totalPrice: total,
+                );
+
+                // 3) Save it to the order history
+                orderHistoryModel.addOrder(order);
+
+                // 4) Clear the cart
                 cartModel.clear();
+
+                // 5) Close the dialog
                 Navigator.of(context).pop();
 
+                // 6) Show a thank-you message
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Thank you for your purchase!'),
