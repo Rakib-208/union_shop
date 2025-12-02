@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/pages/signup_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,9 +14,53 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordCtrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  void _onLogin() {
-    // Bypass auth for now, go straight to home.
-    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+  Future<void> _onLogin() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final email = _emailCtrl.text.trim();
+    final password = _passwordCtrl.text.trim();
+
+    try {
+      // 1) Ask Firebase Auth to sign the user in with email & password
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (!mounted) return;
+
+      // 2) Show success feedback
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Logged in as $email')),
+      );
+
+      // 3) Navigate to home and remove login from back stack
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    } on FirebaseAuthException catch (e) {
+      String message = 'Login failed. Please check your details.';
+
+      if (e.code == 'user-not-found') {
+        message = 'No user found for that email.';
+      } else if (e.code == 'wrong-password') {
+        message = 'Incorrect password.';
+      } else if (e.code == 'invalid-email') {
+        message = 'That email address is not valid.';
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unexpected error. Please try again.'),
+          ),
+        );
+      }
+    }
   }
 
   @override
