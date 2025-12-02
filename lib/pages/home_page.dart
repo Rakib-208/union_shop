@@ -4,6 +4,7 @@ import 'package:union_shop/models/product.dart';
 import 'package:union_shop/widgets/promo.dart';
 import 'package:union_shop/widgets/app_header.dart';
 import 'package:union_shop/widgets/product_card.dart';
+import 'dart:math' as math;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -295,7 +296,11 @@ class HomeScreen extends StatelessWidget {
                                       final isWide = constraints.maxWidth > 600;
                                       final crossAxisCount = isWide ? 4 : 2;
 
-                                      const featuredProducts = allProducts;
+                                      final shuffled =
+                                          List<Product>.from(allProducts);
+                                      shuffled.shuffle(math.Random());
+                                      final featuredProducts =
+                                          shuffled.take(10).toList();
 
                                       return GridView.count(
                                         shrinkWrap: true,

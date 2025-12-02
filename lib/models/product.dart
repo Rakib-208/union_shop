@@ -170,7 +170,7 @@ class Product {
 const List<Product> allProducts = <Product>[
   Product(
     id: 0,
-    name: 'Portsmouth Crest Tee',
+    name: 'Portsmouth Crest T-Shirt',
     price: 18.00,
     type: ProductType.clothing,
     category: ProductCategory.mens,
@@ -199,7 +199,7 @@ const List<Product> allProducts = <Product>[
   ),
   Product(
     id: 2,
-    name: 'Harbour Stripe Tee',
+    name: 'Harbour Stripe T-Shirt',
     price: 20.00,
     type: ProductType.clothing,
     category: ProductCategory.womens,
@@ -228,7 +228,7 @@ const List<Product> allProducts = <Product>[
   ),
   Product(
     id: 4,
-    name: 'Freshers Week Tee',
+    name: 'Freshers Week T-Shirt',
     price: 16.00,
     type: ProductType.clothing,
     category: ProductCategory.unisex,
@@ -242,7 +242,7 @@ const List<Product> allProducts = <Product>[
   ),
   Product(
     id: 5,
-    name: 'Alumni Script Tee',
+    name: 'Alumni Script T-Shirt',
     price: 22.00,
     type: ProductType.clothing,
     category: ProductCategory.mens,
@@ -255,7 +255,7 @@ const List<Product> allProducts = <Product>[
   ),
   Product(
     id: 6,
-    name: 'Seaside Oversized Tee',
+    name: 'Seaside Oversized T-Shirt',
     price: 24.00,
     type: ProductType.clothing,
     category: ProductCategory.womens,
@@ -563,7 +563,7 @@ const List<Product> allProducts = <Product>[
   ),
   Product(
     id: 28,
-    name: 'Graphic Crest Tee',
+    name: 'Graphic Crest T-Shirt',
     price: 19.00,
     type: ProductType.clothing,
     category: ProductCategory.unisex,
