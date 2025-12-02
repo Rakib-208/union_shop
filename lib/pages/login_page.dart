@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:union_shop/pages/signup_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:union_shop/pages/signup_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,13 +15,14 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   Future<void> _onLogin() async {
+    // 1) Run validators on email + password
     if (!_formKey.currentState!.validate()) return;
 
     final email = _emailCtrl.text.trim();
     final password = _passwordCtrl.text.trim();
 
     try {
-      // 1) Ask Firebase Auth to sign the user in with email & password
+      // 2) Ask Firebase to sign this user in
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -29,12 +30,12 @@ class _LoginPageState extends State<LoginPage> {
 
       if (!mounted) return;
 
-      // 2) Show success feedback
+      // 3) Success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Logged in as $email')),
       );
 
-      // 3) Navigate to home and remove login from back stack
+      // 4) Go home and clear the back stack
       Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
     } on FirebaseAuthException catch (e) {
       String message = 'Login failed. Please check your details.';
@@ -107,20 +108,18 @@ class _LoginPageState extends State<LoginPage> {
                   style: theme.textTheme.titleMedium,
                 ),
                 const SizedBox(height: 24),
-
-                // Form
                 Form(
                   key: _formKey,
                   child: Column(
                     children: [
                       TextFormField(
                         controller: _emailCtrl,
-                        keyboardType: TextInputType.emailAddress,
                         decoration: const InputDecoration(
                           labelText: 'Email',
-                          hintText: 'you@example.com',
                           border: OutlineInputBorder(),
                         ),
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
                         validator: (v) {
                           if (v == null || v.trim().isEmpty) {
                             return 'Email is required';
@@ -140,6 +139,8 @@ class _LoginPageState extends State<LoginPage> {
                           labelText: 'Password',
                           border: OutlineInputBorder(),
                         ),
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (_) => _onLogin(),
                         validator: (v) {
                           if (v == null || v.isEmpty) {
                             return 'Password is required';
@@ -151,8 +152,6 @@ class _LoginPageState extends State<LoginPage> {
                         },
                       ),
                       const SizedBox(height: 24),
-
-                      // Login button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -166,14 +165,24 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           child: const Text(
-                            'LOGIN',
-                            style: TextStyle(letterSpacing: 1),
+                            'Login',
+                            style: TextStyle(fontSize: 16),
                           ),
                         ),
                       ),
-
                       const SizedBox(height: 12),
-
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {
+                            // TODO: Implement "Forgot password" via Firebase if you want
+                          },
+                          child: const Text('Forgot password?'),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      const Divider(),
+                      const SizedBox(height: 16),
                       // Register button below
                       TextButton(
                         onPressed: () {

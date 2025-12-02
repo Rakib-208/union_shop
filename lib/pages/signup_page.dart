@@ -32,7 +32,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Future<void> _onSignup() async {
-    // 1) Run form validation first
+    // 1) Run all validators (full name, email, passwords)
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
@@ -42,11 +42,11 @@ class _SignupPageState extends State<SignupPage> {
       final email = _emailCtrl.text.trim();
       final password = _passwordCtrl.text.trim();
 
-      // 2) Create the user in Firebase Auth
+      // 2) Create user in Firebase Auth
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      // 3) Optionally set the display name on the user
+      // 3) Save the full name into the Firebase user profile
       await credential.user?.updateDisplayName(fullName);
 
       if (!mounted) return;
@@ -55,15 +55,13 @@ class _SignupPageState extends State<SignupPage> {
 
       // 4) Show success message
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Account created for $email'),
-        ),
+        SnackBar(content: Text('Account created for $email')),
       );
 
       // 5) Go back to Login page
       Navigator.of(context).pop();
     } on FirebaseAuthException catch (e) {
-      // Handle common Firebase auth errors
+      // Firebase-specific errors (email in use, weak password, etc.)
       String message = 'Signup failed. Please try again.';
 
       if (e.code == 'email-already-in-use') {
@@ -127,6 +125,9 @@ class _SignupPageState extends State<SignupPage> {
                     validator: (v) {
                       if (v == null || v.trim().isEmpty) {
                         return 'Enter your full name';
+                      }
+                      if (v.trim().length < 3) {
+                        return 'Name must be at least 3 characters';
                       }
                       return null;
                     },
@@ -205,7 +206,7 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     validator: (v) {
                       if (v == null || v.isEmpty) {
-                        return 'Re‑enter your password';
+                        return 'Re-enter your password';
                       }
                       if (v != _passwordCtrl.text) {
                         return 'Passwords do not match';
@@ -214,22 +215,19 @@ class _SignupPageState extends State<SignupPage> {
                     },
                   ),
                   const SizedBox(height: 24),
-                  SizedBox(
-                    height: 48,
-                    child: ElevatedButton(
-                      onPressed: _isLoading ? null : _onSignup,
-                      child: _isLoading
-                          ? const SizedBox(
-                              width: 22,
-                              height: 22,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            )
-                          : const Text('Create account'),
-                    ),
+                  ElevatedButton(
+                    onPressed: _isLoading ? null : _onSignup,
+                    child: _isLoading
+                        ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          )
+                        : const Text('Create account'),
                   ),
                   const SizedBox(height: 16),
                   TextButton(
