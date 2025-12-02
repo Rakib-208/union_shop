@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:union_shop/models/cart.dart';
 
 class HeaderButtons extends StatefulWidget {
   final VoidCallback onSearch;
@@ -69,16 +70,63 @@ class _HeaderButtonsState extends State<HeaderButtons> {
           constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
           onPressed: widget.onAccount,
         ),
-        IconButton(
-          icon: const Icon(
-            Icons.shopping_bag_outlined,
-            size: 18,
-            color: Colors.grey,
-          ),
-          tooltip: 'Cart',
-          padding: const EdgeInsets.all(8),
-          constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-          onPressed: widget.onCart,
+        AnimatedBuilder(
+          animation: cartModel, // listen to changes in the global cart
+          builder: (context, _) {
+            final int count = cartModel.totalItemCount;
+
+            return Stack(
+              clipBehavior: Clip.none,
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.shopping_bag_outlined,
+                    size: 18,
+                    color: Colors.grey,
+                  ),
+                  tooltip: 'Cart',
+                  padding: const EdgeInsets.all(8),
+                  constraints:
+                      const BoxConstraints(minWidth: 32, minHeight: 32),
+                  onPressed: () {
+                    // 1) Navigate to the cart page
+                    Navigator.pushNamed(context, '/cart');
+
+                    // 2) Still call the callback in case AppHeader wants to do anything
+                    widget.onCart();
+                  },
+                ),
+
+                // This is the red little number badge
+                if (count > 0)
+                  Positioned(
+                    right: 2, // tweak these to adjust position
+                    top: 2,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 14,
+                        minHeight: 14,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '$count', // show the number of items in cart
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
         ),
         PopupMenuButton<int>(
           icon: const Icon(Icons.menu, size: 18, color: Colors.grey),
