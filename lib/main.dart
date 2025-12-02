@@ -99,17 +99,75 @@ class UnionShopApp extends StatelessWidget {
 
         // 2) Existing dynamic product URLs like /product/<id>
         if (name.startsWith('/product/')) {
-          final product = settings.arguments as Product?;
-          if (product == null) {
-            // If something goes wrong, go back home
+          // Extract whatever comes after "/product/"
+          final segment = name.substring('/product/'.length).trim();
+
+          // If nothing after /product/, treat as invalid (go home + popup)
+          if (segment.isEmpty) {
             return MaterialPageRoute(
-              builder: (context) => const HomeScreen(),
+              builder: (context) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Invalid product URL'),
+                    ),
+                  );
+                });
+                return const HomeScreen();
+              },
               settings: settings,
             );
           }
 
+          // Try to parse the id from the URL, e.g. "/product/5" -> id = 5
+          final int? productId = int.tryParse(segment);
+
+          // If it's not a valid number, treat as invalid URL
+          if (productId == null) {
+            return MaterialPageRoute(
+              builder: (context) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Invalid product URL'),
+                    ),
+                  );
+                });
+                return const HomeScreen();
+              },
+              settings: settings,
+            );
+          }
+
+          // Try to find the product in your allProducts list
+          Product? matchedProduct;
+          for (final p in allProducts) {
+            if (p.id == productId) {
+              matchedProduct = p;
+              break;
+            }
+          }
+
+          // If no product with that id exists, also go home + popup
+          if (matchedProduct == null) {
+            return MaterialPageRoute(
+              builder: (context) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Invalid product URL'),
+                    ),
+                  );
+                });
+                return const HomeScreen();
+              },
+              settings: settings,
+            );
+          }
+
+          // If we got here, we have a real product -> go to ProductPage
           return MaterialPageRoute(
-            builder: (context) => ProductPage(product: product),
+            builder: (context) => ProductPage(product: matchedProduct!),
             settings: settings,
           );
         }

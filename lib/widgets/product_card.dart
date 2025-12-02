@@ -9,7 +9,6 @@ class ProductCard extends StatelessWidget {
     required this.product,
   });
 
-  // Convenience factory if you ever use ProductCard.fromProduct(product)
   factory ProductCard.fromProduct(Product product) {
     return ProductCard(product: product);
   }
@@ -17,97 +16,80 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     final bool hasSale = product.salePrice != null;
     final int? discountPercent = product.discountPercentage?.round();
 
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image + sale badge at the top
-          Stack(
-            children: [
-              AspectRatio(
-                aspectRatio: 4 / 3,
-                child: _buildProductImage(),
-              ),
-              if (hasSale && discountPercent != null)
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: _buildSaleBadge(context, discountPercent),
-                ),
-            ],
-          ),
-
-          // Spacing between image and text
-          const SizedBox(height: 8),
-
-          // Name + pricing
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return InkWell(
+      onTap: () {
+        // Navigate to the product page when the card is tapped
+        Navigator.of(context).pushNamed(
+          '/product/${product.id}',
+          arguments: product,
+        );
+      },
+      child: Card(
+        elevation: 2,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image + sale badge at the top
+            Stack(
               children: [
-                // Product name
-                Text(
-                  product.name,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
+                AspectRatio(
+                  aspectRatio: 4 / 3,
+                  child: _buildProductImage(),
+                ),
+                if (hasSale && discountPercent != null)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: _buildSaleBadge(context, discountPercent),
                   ),
-                ),
-                const SizedBox(height: 4),
-
-                // Pricing row (sale price + original if on sale)
-                Row(
-                  children: [
-                    // Discounted or normal price
-                    Text(
-                      '£${product.discountPrice.toStringAsFixed(2)}',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    if (hasSale) ...[
-                      const SizedBox(width: 6),
-                      Text(
-                        '£${product.price.toStringAsFixed(2)}',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          decoration: TextDecoration.lineThrough,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
               ],
             ),
-          ),
 
-          const SizedBox(height: 8),
-        ],
+            const SizedBox(height: 8),
+
+            // Name + pricing
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Product name
+                  Text(
+                    product.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+
+                  // Pricing row
+                  _buildPriceRow(theme),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }
 
-  /// Builds the main product image for the card.
-  ///
-  /// Uses [product.defaultImage] so it follows the same logic as ProductPage:
-  /// - Prefer the first colour's image (id + colour index)
-  /// - Fall back to [imageAsset] if set
-  /// - If nothing is available or the file is missing, show a placeholder.
+  /// Main product image for the card.
+  /// Uses product.defaultImage so it stays in sync with ProductPage logic.
   Widget _buildProductImage() {
     final String? imagePath = product.defaultImage;
 
-    // If there is no usable image path, show a neutral placeholder.
+    // If there is no usable image path, show a simple placeholder.
     if (imagePath == null || imagePath.isEmpty) {
       return Container(
         color: Colors.grey.shade200,
@@ -122,7 +104,7 @@ class ProductCard extends StatelessWidget {
     }
 
     // Try to load the asset. If the file doesn't exist,
-    // fall back to the same placeholder.
+    // fall back to the same placeholder instead of crashing.
     return Image.asset(
       imagePath,
       fit: BoxFit.cover,
@@ -141,18 +123,55 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-  /// Small red discount badge shown on the image when the product is on sale.
+  /// Shows the price row:
+  /// - If not on sale: just the base price.
+  /// - If on sale: sale price + original crossed out.
+  Widget _buildPriceRow(ThemeData theme) {
+    final bool hasSale = product.salePrice != null;
+    final double basePrice = product.price;
+    final double? salePrice = product.salePrice;
+
+    if (!hasSale || salePrice == null) {
+      // No sale: just show the normal price
+      return Text(
+        '£${basePrice.toStringAsFixed(2)}',
+        style: theme.textTheme.bodyMedium?.copyWith(
+          fontWeight: FontWeight.bold,
+        ),
+      );
+    }
+
+    // On sale: show sale price + original price crossed out
+    return Row(
+      children: [
+        Text(
+          '£${salePrice.toStringAsFixed(2)}',
+          style: theme.textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Colors.redAccent,
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          '£${basePrice.toStringAsFixed(2)}',
+          style: theme.textTheme.bodySmall?.copyWith(
+            decoration: TextDecoration.lineThrough,
+            color: Colors.grey,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Small red discount badge used over the image, e.g. "-20%".
   Widget _buildSaleBadge(BuildContext context, int discountPercent) {
     final theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: Colors.redAccent.withOpacity(0.1),
+        // Using withValues to avoid the deprecation warning on withOpacity.
+        color: Colors.redAccent.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Colors.redAccent,
-          width: 1,
-        ),
       ),
       child: Text(
         '-$discountPercent%',
