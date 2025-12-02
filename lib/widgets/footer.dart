@@ -1,7 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:union_shop/pages/search_results_page.dart';
 
-class Footer extends StatelessWidget {
+class Footer extends StatefulWidget {
   const Footer({super.key});
+
+  @override
+  State<Footer> createState() => _FooterState();
+}
+
+class _FooterState extends State<Footer> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _runFooterSearch() {
+    final query = _searchController.text.trim();
+    if (query.isEmpty) {
+      // If the box is empty, do nothing.
+      return;
+    }
+
+    // Go to the same SearchResultsPage that the header search uses,
+    // passing the text the user typed.
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => SearchResultsPage(query: query),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +83,7 @@ class Footer extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
+          // SECTION TITLE
           const Text(
             'Help and Information',
             style: TextStyle(
@@ -61,10 +92,25 @@ class Footer extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
+          const SizedBox(height: 8),
 
-          const SizedBox(height: 4),
+          // 🔍 NEW SEARCH BAR IN FOOTER
+          TextField(
+            controller: _searchController,
+            textInputAction: TextInputAction.search,
+            onSubmitted: (_) => _runFooterSearch(), // when user hits Enter
+            decoration: InputDecoration(
+              hintText: 'Search products…',
+              border: const OutlineInputBorder(),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: _runFooterSearch, // when user taps the icon
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
 
-          // Make this section interactive
+          // EXISTING LINKS (still clickable)
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -81,10 +127,7 @@ class Footer extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 4),
-
-              // CLICKABLE ABOUT US
               GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(context, '/about');
