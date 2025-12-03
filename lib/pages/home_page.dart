@@ -61,55 +61,6 @@ class HomeScreen extends StatelessWidget {
                                 horizontal: 24,
                                 vertical: 24,
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Explore by category',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 12),
-                                  const Text(
-                                    'Find something for lectures, the library, socials, or just chilling in halls.',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.black54,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: [
-                                        _CategoryChip(
-                                          label: 'Hoodies',
-                                          icon: Icons.checkroom,
-                                          onTap: () =>
-                                              navigateToCollections(context),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        _CategoryChip(
-                                          label: 'T-shirts',
-                                          icon: Icons.emoji_people,
-                                          onTap: () =>
-                                              navigateToCollections(context),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        _CategoryChip(
-                                          label: 'Accessories',
-                                          icon: Icons.workspaces_outline,
-                                          onTap: () =>
-                                              navigateToCollections(context),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
                             ),
                             Container(
                               color: Colors.white,

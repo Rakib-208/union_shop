@@ -152,7 +152,7 @@ class _HeroCategorySliderState extends State<HeroCategorySlider> {
     final isMobile = MediaQuery.of(context).size.width < 600;
 
     return Container(
-      height: isMobile ? 320 : 380,
+      height: isMobile ? 360 : 420,
       width: double.infinity,
       padding: EdgeInsets.symmetric(
         horizontal: isMobile ? 16 : 32,
@@ -170,47 +170,47 @@ class _HeroCategorySliderState extends State<HeroCategorySlider> {
       ),
       child: Column(
         children: [
-          // Main slide content
+          // Main slide content: centered image with overlay text + button
           Expanded(
-            child: Row(
-              children: [
-                // Left: text + button
-                Expanded(
-                  flex: isMobile ? 0 : 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Discover ${slide.label}',
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
+            child: Center(
+              child: AspectRatio(
+                aspectRatio: isMobile ? 4 / 3 : 16 / 9,
+                child: Stack(
+                  children: [
+                    // Full image background
+                    Positioned.fill(
+                      child: _SlideImagePreview(imagePath: imagePath),
+                    ),
+
+                    // Top-left title text
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'Discover ${slide.label}',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Explore all ${slide.label.toLowerCase()}s from the Union Shop collection.',
-                        style: theme.textTheme.bodyMedium,
+                    ),
+
+                    // Bottom-center button on top of the image
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: ElevatedButton(
+                          onPressed: () =>
+                              _onCategoryButtonPressed(context, slide.cat),
+                          child: Text(slide.label),
+                        ),
                       ),
-                      const SizedBox(height: 16),
-                      // Button – this is what the user clicks instead of the image
-                      ElevatedButton(
-                        onPressed: () =>
-                            _onCategoryButtonPressed(context, slide.cat),
-                        child: Text(slide.label),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-
-                if (!isMobile) const SizedBox(width: 24),
-
-                // Right: image preview (if available)
-                if (!isMobile)
-                  Expanded(
-                    flex: 4,
-                    child: _SlideImagePreview(imagePath: imagePath),
-                  ),
-              ],
+              ),
             ),
           ),
 
