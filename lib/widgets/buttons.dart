@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:union_shop/pages/account_page.dart';
 import 'package:union_shop/models/cart.dart';
 import 'package:union_shop/pages/search_results_page.dart';
 
@@ -110,7 +112,23 @@ class _HeaderButtonsState extends State<HeaderButtons> {
           tooltip: 'Account',
           padding: const EdgeInsets.all(8),
           constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-          onPressed: widget.onAccount,
+          onPressed: () {
+            final user = FirebaseAuth.instance.currentUser;
+
+            if (user != null) {
+              // If the user is logged in → go to My Account page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AccountPage(),
+                ),
+              );
+            } else {
+              // If NOT logged in → fall back to whatever AppHeader wants
+              // (right now, that sends them to the Login page)
+              widget.onAccount();
+            }
+          },
         ),
         AnimatedBuilder(
           animation: cartModel, // listen to changes in the global cart

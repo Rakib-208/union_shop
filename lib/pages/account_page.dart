@@ -9,10 +9,13 @@ class AccountPage extends StatelessWidget {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
-      // Safety fallback — shouldn't happen
+      // Safety fallback – this should not normally happen,
+      // because we will only open this page if the user is logged in.
       return Scaffold(
         appBar: AppBar(title: const Text('My Account')),
-        body: const Center(child: Text('You are not logged in.')),
+        body: const Center(
+          child: Text('You are not logged in.'),
+        ),
       );
     }
 
@@ -26,7 +29,10 @@ class AccountPage extends StatelessWidget {
           children: [
             Text(
               '👋 Hello, ${user.displayName ?? 'User'}',
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 12),
             Text('📧 Email: ${user.email}'),
@@ -37,14 +43,22 @@ class AccountPage extends StatelessWidget {
                 label: const Text('Logout'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.redAccent,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
                 ),
                 onPressed: () async {
+                  // 1) Sign out from Firebase
                   await FirebaseAuth.instance.signOut();
+
+                  // 2) Go back to the homepage and clear history
                   if (context.mounted) {
                     Navigator.pushNamedAndRemoveUntil(
-                        context, '/', (_) => false);
+                      context,
+                      '/',
+                      (_) => false,
+                    );
                   }
                 },
               ),
