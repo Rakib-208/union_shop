@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:union_shop/widgets/buttons.dart';
 
 class AppHeader extends StatelessWidget {
@@ -71,12 +72,7 @@ class AppHeader extends StatelessWidget {
                     flex: 55,
                     child: Align(
                       alignment: Alignment.centerRight,
-                      child: HeaderButtons(
-                        onSearch: _placeholderCallback,
-                        onAccount: () => _navigateToLogin(context),
-                        onCart: _placeholderCallback,
-                        onMenu: _placeholderCallback,
-                      ),
+                      child: _buildAccountActions(context),
                     ),
                   ),
                 ],
@@ -189,5 +185,41 @@ class AppHeader extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildAccountActions(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // User is logged in
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '👤 Hello, ${user.displayName ?? 'User'}',
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(width: 8),
+          IconButton(
+            tooltip: 'Logout',
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              if (context.mounted) {
+                Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+              }
+            },
+          ),
+        ],
+      );
+    } else {
+      // Not logged in — show the regular icon bar
+      return HeaderButtons(
+        onSearch: _placeholderCallback,
+        onAccount: () => _navigateToLogin(context),
+        onCart: _placeholderCallback,
+        onMenu: _placeholderCallback,
+      );
+    }
   }
 }
