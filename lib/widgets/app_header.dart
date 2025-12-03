@@ -29,6 +29,10 @@ class AppHeader extends StatelessWidget {
     Navigator.pushNamed(context, '/print-shack');
   }
 
+  void _navigateToPrintShackAbout(BuildContext context) {
+    Navigator.pushNamed(context, '/print-shack-about');
+  }
+
   void _placeholderCallback() {
     // For search/cart/menu actions not implemented yet.
   }
@@ -143,16 +147,42 @@ class AppHeader extends StatelessWidget {
                               ),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () => _navigateToPrintShack(context),
+                          PopupMenuButton<String>(
+                            onSelected: (value) {
+                              if (value == 'personalise') {
+                                _navigateToPrintShack(context);
+                              } else if (value == 'about') {
+                                _navigateToPrintShackAbout(context);
+                              }
+                            },
+                            itemBuilder: (context) => const [
+                              PopupMenuItem<String>(
+                                value: 'personalise',
+                                child: Text('Print Shack – Personalise'),
+                              ),
+                              PopupMenuItem<String>(
+                                value: 'about',
+                                child: Text('About Print Shack'),
+                              ),
+                            ],
                             child: const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 12),
-                              child: Text(
-                                'Print Shack',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Print Shack',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_drop_down,
+                                    size: 18,
+                                    color: Colors.black,
+                                  ),
+                                ],
                               ),
                             ),
                           ),

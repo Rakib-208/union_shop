@@ -16,6 +16,7 @@ import 'package:union_shop/pages/order_history_page.dart';
 import 'package:union_shop/models/cart.dart';
 import 'package:union_shop/models/order.dart';
 import 'package:union_shop/pages/print_shack_page.dart';
+import 'package:union_shop/pages/static/print_shack_about_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,6 +60,7 @@ class UnionShopApp extends StatelessWidget {
         '/orders': (context) => const OrderHistoryPage(),
         '/terms': (context) => const TermsAndConditionsPage(),
         '/print-shack': (context) => const PrintShackPage(),
+        '/print-shack-about': (context) => const PrintShackAboutPage(),
         SignupPage.routeName: (context) => const SignupPage(),
       },
       onGenerateRoute: (settings) {
