@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:union_shop/pages/home_page.dart';
 import 'package:union_shop/pages/product_page.dart';
 import 'package:union_shop/pages/login_page.dart';
-import 'package:union_shop/pages/aboutus_page.dart';
+import 'package:union_shop/pages/static/aboutus_page.dart';
 import 'package:union_shop/pages/signup_page.dart';
 import 'package:union_shop/pages/collections_page.dart';
 import 'package:union_shop/pages/collection_page.dart';
 import 'package:union_shop/pages/sale_collection_page.dart';
 import 'package:union_shop/models/product.dart';
-import 'package:union_shop/pages/t_c.dart'; // FIX: for typed product route
+import 'package:union_shop/pages/static/t_c.dart'; // FIX: for typed product route
 import 'package:union_shop/pages/cart_page.dart';
 import 'package:union_shop/pages/order_history_page.dart';
 
