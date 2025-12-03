@@ -49,7 +49,7 @@ class _CollectionPageState extends State<CollectionPage> {
           ? true
           : product.colours.contains(_selectedColour);
 
-      return matchesType && matchesSize && matchesColour;
+      return matchesType && matchesSize && matchesColour && matchesCat;
     }).toList();
 
     // 2) Sort

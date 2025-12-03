@@ -4,6 +4,7 @@ import 'package:union_shop/models/product.dart';
 import 'package:union_shop/widgets/promo.dart';
 import 'package:union_shop/widgets/app_header.dart';
 import 'package:union_shop/widgets/product_card.dart';
+import 'package:union_shop/widgets/hero_category_slider.dart';
 import 'dart:math' as math;
 
 class HomeScreen extends StatelessWidget {
@@ -40,8 +41,6 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final isMobile = constraints.maxWidth < 600;
-
           return Container(
             color: Colors.white,
             child: Center(
@@ -55,160 +54,7 @@ class HomeScreen extends StatelessWidget {
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
-                            SizedBox(
-                              height: 400,
-                              width: double.infinity,
-                              child: Stack(
-                                children: [
-                                  Positioned.fill(
-                                    child: Image.network(
-                                      'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Positioned.fill(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: [
-                                            Colors.black.withValues(alpha: .4),
-                                            Colors.black.withValues(alpha: .4),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned.fill(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 32,
-                                        vertical: 24,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            flex: 6,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 12,
-                                                    vertical: 6,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white
-                                                        .withValues(alpha: .12),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      50,
-                                                    ),
-                                                  ),
-                                                  child: const Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Icon(
-                                                        Icons.trending_up,
-                                                        color: Colors.amber,
-                                                        size: 16,
-                                                      ),
-                                                      SizedBox(width: 6),
-                                                      Text(
-                                                        'New season, new drops',
-                                                        style: TextStyle(
-                                                          color: Colors.white70,
-                                                          fontSize: 12,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 20),
-                                                const Text(
-                                                  'Wear your campus pride.\nEvery day.',
-                                                  style: TextStyle(
-                                                    fontSize: 32,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white,
-                                                    height: 1.3,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 12),
-                                                const Text(
-                                                  'Premium university-branded clothing designed for comfort, style, and everyday uni life.',
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.white70,
-                                                    height: 1.5,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 24),
-                                                Row(
-                                                  children: [
-                                                    ElevatedButton(
-                                                      onPressed: () =>
-                                                          navigateToCollections(
-                                                              context),
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                        backgroundColor:
-                                                            Colors.amber,
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          horizontal: 24,
-                                                          vertical: 12,
-                                                        ),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(8),
-                                                        ),
-                                                      ),
-                                                      child: const Text(
-                                                        'Shop collections',
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          if (!isMobile)
-                                            const SizedBox(width: 24),
-                                          if (!isMobile)
-                                            Expanded(
-                                              flex: 4,
-                                              child: Align(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: HeroPreviewCard(
-                                                  onShopNow: () =>
-                                                      navigateToCollections(
-                                                          context),
-                                                ),
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            const HeroCategorySlider(),
                             Container(
                               color: Colors.white,
                               padding: const EdgeInsets.symmetric(
