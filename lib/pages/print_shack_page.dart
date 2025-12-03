@@ -68,9 +68,8 @@ class _PrintShackPageState extends State<PrintShackPage> {
                         Center(
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(12),
-                            child: Image.network(
-                              // Placeholder UPSU image
-                              'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
+                            child: Image.asset(
+                              'assets/images/print.jpeg',
                               height: 260,
                               width: 260,
                               fit: BoxFit.cover,
