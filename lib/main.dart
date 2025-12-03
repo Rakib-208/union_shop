@@ -14,6 +14,7 @@ import 'package:union_shop/pages/static/t_c.dart';
 import 'package:union_shop/pages/cart_page.dart';
 import 'package:union_shop/pages/order_history_page.dart';
 import 'package:union_shop/models/cart.dart';
+import 'package:union_shop/models/order.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await cartModel.loadFromPrefs();
+  await orderHistoryModel.loadFromPrefs();
   runApp(const UnionShopApp());
 }
 
