@@ -329,6 +329,7 @@ class _PrintShackPageState extends State<PrintShackPage> {
                                     child: const Text(
                                       'ADD TO CART',
                                       style: TextStyle(
+                                        color: Colors.white,
                                         fontSize: 16,
                                         letterSpacing: 1.2,
                                       ),
