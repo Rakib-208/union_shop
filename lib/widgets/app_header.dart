@@ -117,102 +117,105 @@ class AppHeader extends StatelessWidget {
                     flex: 40,
                     child: Align(
                       alignment: Alignment.center,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () => _navigateToHome(context),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 12),
-                              child: Text(
-                                'Home',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () => _navigateToCollections(context),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 12),
-                              child: Text(
-                                'Collections',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                          PopupMenuButton<String>(
-                            onSelected: (value) {
-                              if (value == 'personalise') {
-                                _navigateToPrintShack(context);
-                              } else if (value == 'about') {
-                                _navigateToPrintShackAbout(context);
-                              }
-                            },
-                            itemBuilder: (context) => const [
-                              PopupMenuItem<String>(
-                                value: 'personalise',
-                                child: Text('Print Shack – Personalise'),
-                              ),
-                              PopupMenuItem<String>(
-                                value: 'about',
-                                child: Text('About Print Shack'),
-                              ),
-                            ],
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 12),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Print Shack',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.arrow_drop_down,
-                                    size: 18,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () => _navigateToHome(context),
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                child: Text(
+                                  'Home',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () => _navigateToSaleCollections(context),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 12),
-                              child: Text(
-                                'Sale',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
                                 ),
                               ),
                             ),
-                          ),
-                          GestureDetector(
-                            onTap: () => _navigateToAboutUs(context),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 12),
-                              child: Text(
-                                'About Us',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
+                            GestureDetector(
+                              onTap: () => _navigateToCollections(context),
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                child: Text(
+                                  'Collections',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                            PopupMenuButton<String>(
+                              onSelected: (value) {
+                                if (value == 'personalise') {
+                                  _navigateToPrintShack(context);
+                                } else if (value == 'about') {
+                                  _navigateToPrintShackAbout(context);
+                                }
+                              },
+                              itemBuilder: (context) => const [
+                                PopupMenuItem<String>(
+                                  value: 'personalise',
+                                  child: Text('Print Shack – Personalise'),
+                                ),
+                                PopupMenuItem<String>(
+                                  value: 'about',
+                                  child: Text('About Print Shack'),
+                                ),
+                              ],
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Print Shack',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_drop_down,
+                                      size: 18,
+                                      color: Colors.black,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () => _navigateToSaleCollections(context),
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                child: Text(
+                                  'Sale',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () => _navigateToAboutUs(context),
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                child: Text(
+                                  'About Us',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
