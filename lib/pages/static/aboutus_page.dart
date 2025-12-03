@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/widgets/footer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutUsPage extends StatelessWidget {
   const AboutUsPage({super.key});
@@ -140,7 +141,22 @@ class AboutUsPage extends StatelessWidget {
             contactRow(Icons.location_on,
                 'University of Portsmouth Students’ Union\nCambridge Road, Portsmouth PO1 2EF'),
             const SizedBox(height: 12),
-            contactRow(Icons.email, 'support@upsu.net'),
+            GestureDetector(
+              onTap: () async {
+                // Open Gmail compose in a new tab with the "to" field prefilled
+                final Uri gmailUri = Uri.parse(
+                  'https://mail.google.com/mail/?view=cm&fs=1&to=support@upsu.net',
+                );
+
+                if (await canLaunchUrl(gmailUri)) {
+                  await launchUrl(
+                    gmailUri,
+                    mode: LaunchMode.externalApplication,
+                  );
+                }
+              },
+              child: contactRow(Icons.email, 'support@upsu.net'),
+            ),
             const SizedBox(height: 12),
             contactRow(
                 Icons.access_time, 'Monday–Friday: 10am–4pm (Term Time)'),
@@ -182,7 +198,15 @@ class AboutUsPage extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(fontSize: 16, height: 1.4),
+            style: text.contains('@')
+                ? const TextStyle(
+                    fontSize: 16,
+                    height: 1.4,
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.w500,
+                  )
+                : const TextStyle(fontSize: 16, height: 1.4),
           ),
         ),
       ],
