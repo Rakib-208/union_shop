@@ -33,56 +33,52 @@ class ProductCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
-          alignment: Alignment.topLeft,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Image + sale badge at the top
-              Stack(
-                children: [
-                  AspectRatio(
-                    aspectRatio: 4 / 3,
-                    child: _buildProductImage(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image + sale badge at the top
+            Stack(
+              children: [
+                AspectRatio(
+                  aspectRatio: 4 / 3,
+                  child: _buildProductImage(),
+                ),
+                if (hasSale && discountPercent != null)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: _buildSaleBadge(context, discountPercent),
                   ),
-                  if (hasSale && discountPercent != null)
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: _buildSaleBadge(context, discountPercent),
+              ],
+            ),
+
+            const SizedBox(height: 8),
+
+            // Name + pricing
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Product name
+                  Text(
+                    product.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
                     ),
+                  ),
+                  const SizedBox(height: 4),
+
+                  // Pricing row
+                  _buildPriceRow(theme),
                 ],
               ),
+            ),
 
-              const SizedBox(height: 8),
-
-              // Name + pricing
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Product name
-                    Text(
-                      product.name,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-
-                    // Pricing row
-                    _buildPriceRow(theme),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 8),
-            ],
-          ),
+            const SizedBox(height: 8),
+          ],
         ),
       ),
     );
