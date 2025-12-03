@@ -233,42 +233,46 @@ class _HeroCategorySliderState extends State<HeroCategorySlider> {
           const SizedBox(height: 16),
 
           // Dots + Previous / Next buttons
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Previous button
-              IconButton(
-                onPressed: _goToPrevious,
-                icon: const Icon(Icons.arrow_back),
-                tooltip: 'Previous category',
-              ),
+          // Dots + Previous / Next buttons
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Previous button
+                IconButton(
+                  onPressed: _goToPrevious,
+                  icon: const Icon(Icons.arrow_back),
+                  tooltip: 'Previous category',
+                ),
 
-              // Dots in the middle
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: List.generate(_slides.length, (index) {
-                  final isActive = index == _currentIndex;
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    width: isActive ? 10 : 8,
-                    height: isActive ? 10 : 8,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isActive
-                          ? theme.colorScheme.primary
-                          : Colors.grey.shade400,
-                    ),
-                  );
-                }),
-              ),
+                // Dots in the middle
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(_slides.length, (index) {
+                    final isActive = index == _currentIndex;
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      width: isActive ? 10 : 8,
+                      height: isActive ? 10 : 8,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isActive
+                            ? theme.colorScheme.primary
+                            : Colors.grey.shade400,
+                      ),
+                    );
+                  }),
+                ),
 
-              // Next button
-              IconButton(
-                onPressed: _goToNext,
-                icon: const Icon(Icons.arrow_forward),
-                tooltip: 'Next category',
-              ),
-            ],
+                // Next button
+                IconButton(
+                  onPressed: _goToNext,
+                  icon: const Icon(Icons.arrow_forward),
+                  tooltip: 'Next category',
+                ),
+              ],
+            ),
           ),
         ],
       ),

@@ -142,24 +142,29 @@ class ProductCard extends StatelessWidget {
     }
 
     // On sale: show sale price + original price crossed out
-    return Row(
-      children: [
-        Text(
-          '£${salePrice.toStringAsFixed(2)}',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Colors.redAccent,
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '£${salePrice.toStringAsFixed(2)}',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Colors.redAccent,
+            ),
           ),
-        ),
-        const SizedBox(width: 6),
-        Text(
-          '£${basePrice.toStringAsFixed(2)}',
-          style: theme.textTheme.bodySmall?.copyWith(
-            decoration: TextDecoration.lineThrough,
-            color: Colors.grey,
+          const SizedBox(width: 6),
+          Text(
+            '£${basePrice.toStringAsFixed(2)}',
+            style: theme.textTheme.bodySmall?.copyWith(
+              decoration: TextDecoration.lineThrough,
+              color: Colors.grey,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
