@@ -25,6 +25,10 @@ class AppHeader extends StatelessWidget {
     Navigator.pushNamed(context, '/login');
   }
 
+  void _navigateToPrintShack(BuildContext context) {
+    Navigator.pushNamed(context, '/print-shack');
+  }
+
   void _placeholderCallback() {
     // For search/cart/menu actions not implemented yet.
   }
@@ -132,6 +136,19 @@ class AppHeader extends StatelessWidget {
                               padding: EdgeInsets.symmetric(horizontal: 12),
                               child: Text(
                                 'Collections',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () => _navigateToPrintShack(context),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12),
+                              child: Text(
+                                'Print Shack',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.black,

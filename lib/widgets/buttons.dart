@@ -217,7 +217,10 @@ class _HeaderButtonsState extends State<HeaderButtons> {
               Navigator.of(context).pushNamed('/about');
             } else if (value == 5) {
               Navigator.of(context).pushNamed('/orders');
+            } else if (value == 6) {
+              Navigator.of(context).pushNamed('/print-shack');
             }
+
             widget.onMenu();
           },
           itemBuilder: (context) => const [
@@ -278,6 +281,16 @@ class _HeaderButtonsState extends State<HeaderButtons> {
                   Icon(Icons.history, size: 10),
                   SizedBox(width: 5),
                   Text('Orders'),
+                ],
+              ),
+            ),
+            PopupMenuItem<int>(
+              value: 6,
+              child: Row(
+                children: const [
+                  Icon(Icons.local_printshop, size: 10),
+                  SizedBox(width: 5),
+                  Text('Print Shack'),
                 ],
               ),
             ),
