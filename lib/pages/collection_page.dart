@@ -9,12 +9,14 @@ import 'package:union_shop/widgets/product_card.dart' show ProductCard;
 /// - or all products (when [typeFilter] is null)
 class CollectionPage extends StatefulWidget {
   final String title;
-  final ProductType? typeFilter; // null = show all product types
+  final ProductType? typeFilter;
+  final ProductCat? catFilter;
 
   const CollectionPage({
     super.key,
     required this.title,
     this.typeFilter,
+    this.catFilter,
   });
 
   @override
@@ -32,6 +34,8 @@ class _CollectionPageState extends State<CollectionPage> {
   List<Product> _filteredAndSortedProducts() {
     // 1) Filter
     List<Product> filtered = allProducts.where((product) {
+      final bool matchesCat =
+          widget.catFilter == null || product.cat == widget.catFilter;
       // Type filter: if typeFilter is null, accept all types
       final bool matchesType =
           widget.typeFilter == null ? true : product.type == widget.typeFilter;
