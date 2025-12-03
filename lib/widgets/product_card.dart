@@ -40,7 +40,7 @@ class ProductCard extends StatelessWidget {
             Stack(
               children: [
                 AspectRatio(
-                  aspectRatio: 4 / 3,
+                  aspectRatio: 1,
                   child: _buildProductImage(),
                 ),
                 if (hasSale && discountPercent != null)
@@ -69,7 +69,7 @@ class ProductCard extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2),
 
                   // Pricing row
                   _buildPriceRow(theme),
@@ -77,7 +77,7 @@ class ProductCard extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
           ],
         ),
       ),

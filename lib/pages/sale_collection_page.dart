@@ -99,7 +99,7 @@ class SaleCollectionPage extends StatelessWidget {
                                     crossAxisCount: crossAxisCount,
                                     mainAxisSpacing: 24,
                                     crossAxisSpacing: 24,
-                                    childAspectRatio: 1 / 2,
+                                    childAspectRatio: 0.75,
                                     children: [
                                       for (final product in saleProducts)
                                         ProductCard.fromProduct(product),

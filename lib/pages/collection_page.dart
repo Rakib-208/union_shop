@@ -242,7 +242,7 @@ class _CollectionPageState extends State<CollectionPage> {
       physics: const NeverScrollableScrollPhysics(),
       mainAxisSpacing: 16,
       crossAxisSpacing: 16,
-      childAspectRatio: 1 / 2,
+      childAspectRatio: 0.75,
       children: products
           .map(
             (product) => ProductCard.fromProduct(product),
