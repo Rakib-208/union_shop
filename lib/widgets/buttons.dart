@@ -202,7 +202,17 @@ class _HeaderButtonsState extends State<HeaderButtons> {
             } else if (value == 2) {
               Navigator.of(context).pushNamed('/sale');
             } else if (value == 3) {
-              Navigator.of(context).pushNamed('/login');
+              final user = FirebaseAuth.instance.currentUser;
+              if (user != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AccountPage(),
+                  ),
+                );
+              } else {
+                Navigator.of(context).pushNamed('/login');
+              }
             } else if (value == 4) {
               Navigator.of(context).pushNamed('/about');
             } else if (value == 5) {
