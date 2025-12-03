@@ -143,7 +143,7 @@ class Product {
   /// By default it assumes a PNG file.
   String? primaryImageForColourName(
     String colourName, {
-    String extension = 'png',
+    String extension = 'jpeg',
   }) {
     return _buildImagePathFromColourName(colourName, extension);
   }
