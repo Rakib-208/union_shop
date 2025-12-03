@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:union_shop/models/product.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// One line in the shopping cart.
 /// Example: 3 × Navy / M / Hoodie
@@ -30,6 +32,37 @@ class CartItem {
     return product.id == otherProduct.id &&
         size == otherSize &&
         colour == otherColour;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'productId': product.id,
+      'size': size,
+      'colour': colour,
+      'quantity': quantity,
+    };
+  }
+
+  /// Create a CartItem back from simple data.
+  ///
+  /// This uses the productId to look up the full Product from allProducts.
+  static CartItem fromJson(Map<String, dynamic> json) {
+    final int productId = json['productId'] as int;
+
+    // Find the matching Product in the global product list.
+    final product = allProducts.firstWhere(
+      (p) => p.id == productId,
+      orElse: () {
+        throw Exception('Product with id $productId not found');
+      },
+    );
+
+    return CartItem(
+      product: product,
+      size: json['size'] as String,
+      colour: json['colour'] as String,
+      quantity: json['quantity'] as int,
+    );
   }
 }
 
@@ -69,6 +102,7 @@ class CartModel extends ChangeNotifier {
 
     // Tell the UI that something changed
     notifyListeners();
+    _saveToPrefs();
   }
 
   /// Update the quantity of a specific CartItem.
@@ -84,6 +118,7 @@ class CartModel extends ChangeNotifier {
     if (index != -1) {
       _items[index].quantity = newQuantity;
       notifyListeners();
+      _saveToPrefs();
     }
   }
 
@@ -91,12 +126,14 @@ class CartModel extends ChangeNotifier {
   void removeItem(CartItem item) {
     _items.remove(item);
     notifyListeners();
+    _saveToPrefs();
   }
 
   /// Remove everything from the cart.
   void clear() {
     _items.clear();
     notifyListeners();
+    _saveToPrefs();
   }
 
   /// Total number of items in the cart (sum of quantities).
@@ -113,6 +150,45 @@ class CartModel extends ChangeNotifier {
 
   /// True if the cart is empty.
   bool get isEmpty => _items.isEmpty;
+
+  Future<void> _saveToPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Turn each CartItem into a simple Map, then into a list, then JSON string.
+    final cartJsonList = _items.map((item) => item.toJson()).toList();
+    final encoded = jsonEncode(cartJsonList);
+
+    await prefs.setString('cart_items', encoded);
+  }
+
+  /// Load cart items from SharedPreferences (if any) and rebuild the cart.
+  Future<void> loadFromPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final encoded = prefs.getString('cart_items');
+    if (encoded == null) {
+      // Nothing saved before – leave cart empty.
+      return;
+    }
+
+    try {
+      final decoded = jsonDecode(encoded) as List<dynamic>;
+
+      _items
+        ..clear()
+        ..addAll(
+          decoded.map((itemJson) {
+            return CartItem.fromJson(itemJson as Map<String, dynamic>);
+          }),
+        );
+
+      notifyListeners();
+    } catch (e) {
+      // If something goes wrong (e.g. corrupted data), just clear cart.
+      _items.clear();
+      notifyListeners();
+    }
+  }
 }
 
 /// One global cart that the whole app can use.

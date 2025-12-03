@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:union_shop/firebase_options.dart';
-
 import 'package:union_shop/pages/home_page.dart';
 import 'package:union_shop/pages/product_page.dart';
 import 'package:union_shop/pages/login_page.dart';
@@ -14,12 +13,14 @@ import 'package:union_shop/models/product.dart';
 import 'package:union_shop/pages/static/t_c.dart';
 import 'package:union_shop/pages/cart_page.dart';
 import 'package:union_shop/pages/order_history_page.dart';
+import 'package:union_shop/models/cart.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await cartModel.loadFromPrefs();
   runApp(const UnionShopApp());
 }
 
