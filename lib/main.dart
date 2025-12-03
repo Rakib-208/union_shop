@@ -8,7 +8,7 @@ import 'package:union_shop/pages/collections_page.dart';
 import 'package:union_shop/pages/collection_page.dart';
 import 'package:union_shop/pages/sale_collection_page.dart';
 import 'package:union_shop/models/product.dart';
-import 'package:union_shop/pages/static/t_c.dart'; // FIX: for typed product route
+import 'package:union_shop/pages/static/t_c.dart';
 import 'package:union_shop/pages/cart_page.dart';
 import 'package:union_shop/pages/order_history_page.dart';
 
