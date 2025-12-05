@@ -80,7 +80,7 @@ Firebase project with Email/Password Auth enabled
 ---------------------------------------------------------------------------------------
 
 Clone the repository:
-git clone https://github.com/your-username/union-shop.git && cd union-shop
+git clone https://github.com/Rakib-208/union-shop.git && cd union-shop
 
 Install dependencies:
 flutter pub get

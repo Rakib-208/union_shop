@@ -40,7 +40,7 @@ class ProductCard extends StatelessWidget {
             Stack(
               children: [
                 AspectRatio(
-                  aspectRatio: 1,
+                  aspectRatio: 4 / 3,
                   child: _buildProductImage(),
                 ),
                 if (hasSale && discountPercent != null)
@@ -52,7 +52,7 @@ class ProductCard extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
 
             // Name + pricing
             Padding(
