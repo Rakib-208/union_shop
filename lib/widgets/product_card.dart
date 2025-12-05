@@ -52,28 +52,31 @@ class ProductCard extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 4),
+            const SizedBox(height: 8),
 
-            // Name + pricing
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Product name
-                  Text(
-                    product.name,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
+            // Name + pricing area – can scale down if the tile is tight
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Product name
+                    Text(
+                      product.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 2),
-
-                  // Pricing row
-                  _buildPriceRow(theme),
-                ],
+                    const SizedBox(height: 4),
+                    // Pricing row
+                    _buildPriceRow(theme),
+                  ],
+                ),
               ),
             ),
 
