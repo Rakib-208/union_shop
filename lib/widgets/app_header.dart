@@ -62,8 +62,8 @@ class AppHeader extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: GestureDetector(
                         onTap: () => _navigateToHome(context),
-                        child: Image.network(
-                          'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
+                        child: Image.asset(
+                          'assets/images/main.png',
                           height: 32,
                           errorBuilder: (context, error, stackTrace) =>
                               const Icon(
@@ -100,8 +100,8 @@ class AppHeader extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: GestureDetector(
                         onTap: () => _navigateToHome(context),
-                        child: Image.network(
-                          'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
+                        child: Image.asset(
+                          'assets/images/main.png',
                           height: 40,
                           errorBuilder: (context, error, stackTrace) =>
                               const Icon(

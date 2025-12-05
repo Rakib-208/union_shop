@@ -91,8 +91,8 @@ class _LoginPageState extends State<LoginPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.network(
-                      'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
+                    Image.asset(
+                      'assets/images/main.png',
                       height: 40,
                       errorBuilder: (context, error, stackTrace) =>
                           const Icon(Icons.store, color: Colors.grey),

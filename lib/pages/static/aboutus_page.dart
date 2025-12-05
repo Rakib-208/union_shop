@@ -29,8 +29,8 @@ class AboutUsPage extends StatelessWidget {
             // Header Image
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
+              child: Image.asset(
+                'assets/images/main.png',
                 height: 180,
                 width: double.infinity,
                 fit: BoxFit.contain,
